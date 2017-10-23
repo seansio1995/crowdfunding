@@ -11,3 +11,4 @@ Tasks for Sprint 0:
   b. Connecting standalone program to web servers
   
   c. Messaging service
+4. Commit some changes to a demo branch
