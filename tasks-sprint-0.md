@@ -6,10 +6,10 @@ Tasks for Sprint 0:
 
 3. Technical issues
 
-  a. Encryption/decryption
+  a. Encryption/decryption: 
   
-  b. Connecting standalone program to web servers
+  b. Connecting standalone program to web servers: 
   
-  c. Messaging service
+  c. Messaging service: 
   
 4. Commit some changes to a demo branch
