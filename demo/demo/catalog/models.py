@@ -36,3 +36,30 @@ class Friend(models.Model):
         Returns the url to access a particular instance of the model.
         """
         return reverse('model-detail-view', args=[str(self.id)])
+
+class Report(models.Model):
+    company = models.CharField(max_length=30, help_text="Company name")
+
+    phone = models.CharField(max_length=20, help_text="Company phone number")
+
+    location = models.CharField(max_length=20, help_text="Company location")
+
+    country = models.CharField(max_length=30, help_text="Company country")
+
+    sector = models.CharField(max_length=30, help_text="Company sector")
+
+    industry = models.CharField(max_length=30, help_text="Company industry")
+
+    class Meta:
+        ordering = ["company"]
+
+    def __str__(self):
+        return self.Name
+
+    def get_absolute_url(self):
+        return reverse('model-detail-view', args=[str(self.id)])
+
+
+
+
+

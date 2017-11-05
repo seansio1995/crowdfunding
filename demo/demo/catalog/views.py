@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from .models import Person, Friend
+from django.views import generic
+from .models import Person, Friend, Report
 # Create your views here.
 
 def index(request):
@@ -11,3 +12,6 @@ def index(request):
         'index.html',
         context={'num_peeps':num_peeps,'num_frens':num_frens},
     )
+
+class ReportListView(generic.ListView):
+    model = Report
