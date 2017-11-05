@@ -2,16 +2,16 @@ from django.db import models
 from django.urls import reverse
 
 # Create your models here.
-class Person(models.Model):
-    Name = models.CharField(max_length=20, help_text="Enter a name")
+class Company(models.Model):
+    Username = models.CharField(max_length=20, help_text="Enter a username")
 
-    Age = models.IntegerField(help_text="Enter an age")
+    Company = models.IntegerField(help_text="Enter a Company Name")
 
     class Meta:
-        ordering = ["Name"]
+        ordering = ["Company"]
 
     def __str__(self):
-        return self.Name
+        return self.Username
 
     def get_absolute_url(self):
         """
@@ -20,16 +20,31 @@ class Person(models.Model):
         return reverse('model-detail-view', args=[str(self.id)])
 
 
-class Friend(models.Model):
-    Name = models.CharField(max_length=20, help_text="Enter a name")
+class Intevestor(models.Model):
+    UserName = models.CharField(max_length=20, help_text="Enter a username")
 
-    Age = models.IntegerField(help_text="Enter an age")
 
     class Meta:
-        ordering = ["Name"]
+        ordering = ["UserName"]
 
     def __str__(self):
-        return "The friend" + self.Name
+        return self.UserName
+
+    def get_absolute_url(self):
+        """
+        Returns the url to access a particular instance of the model.
+        """
+        return reverse('model-detail-view', args=[str(self.id)])
+
+
+class Manager(models.Model):
+    UserName = models.CharField(max_length=20)
+
+    class Meta:
+        ordering = ["UserName"]
+
+    def __str__(self):
+        return self.UserName
 
     def get_absolute_url(self):
         """
@@ -58,8 +73,6 @@ class Report(models.Model):
 
     def get_absolute_url(self):
         return reverse('model-detail-view', args=[str(self.id)])
-
-
 
 
 
