@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+<html lang="en">
+{% block content %}
+<h1>Friend List Home</h1>
+
+  <p>Welcome to <em>Friend List</em>, the best website ever.</p>
+
+<h2>Dynamic content</h2>
+
+  <p>The List has the following record counts:</p>
+  <ul>
+    <li><strong>People:</strong> {{ num_peeps }}</li>
+    <li><strong>Friends:</strong> {{ num_frens }}</li>
+  </ul>
+
+{% endblock %}
