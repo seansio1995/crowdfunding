@@ -3,7 +3,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.views import generic
 from .models import Report
-from .forms import SignUpForm
 # Create your views here.
 
 def signup(request):
