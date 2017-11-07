@@ -1,5 +1,7 @@
 {% extends "base_generic.html" %}
 
+#this needs to have links to previously sent messages as well
+
 {% block content %}
              <ul class="sidebar-nav">
      <li><a href={% url 'logout' %}> Log Out</a></li>
@@ -9,6 +11,7 @@
   <form method="post">
     {% csrf_token %}
     {{ form1.as_p }}
-    <button type="submit">Send Message</button>
+      <li><a href={% url 'newmessage' %}>Send Message</a></li>
+
   </form>
 {% endblock %}

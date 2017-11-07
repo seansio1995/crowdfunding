@@ -5,6 +5,10 @@ from .forms import SignUpForm, LoginForm
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+
+##!!!! if you add a view, make sure to add the @login_required tag before so that it cannot be accessed
+    #just by typing in the url!!!!!
+
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
