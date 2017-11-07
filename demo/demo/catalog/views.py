@@ -46,7 +46,9 @@ def logout(request):
     return render(request, 'logged_out.html')
 
 def createreport(request):
-    return render(create_report.html)
+    if request.method=="POST":
+        return redirect("home")
+    return render(request,'createreport.html')
 
 
 def messaging(request):
