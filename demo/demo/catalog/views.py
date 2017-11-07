@@ -50,4 +50,8 @@ def logout(request):
 
 
 def createreport(request):
-    
+    return render(request,"create_report.html")
+
+
+def message(request):
+    return render(request,"messaging.html")
