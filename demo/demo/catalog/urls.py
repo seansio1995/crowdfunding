@@ -11,5 +11,5 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^login/$', views.Login, name = 'login'),
     url(r'^logout/$', views.logout, name='logout'),
-    url(r'^createreport/$', views.createreport, name='logout'),
+    url(r'^createreport/$', views.createreport, name='createreport'),
 ]
