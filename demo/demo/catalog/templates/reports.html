@@ -2,7 +2,7 @@
 
  {% block content %}
      <h1>Report List</h1>
-
+              <li><a href={% url 'logout' %}> Log Out</a></li>
      {% if reports %}
      <ul>
        {% for report in report_list %}
@@ -10,7 +10,6 @@
          <a href="{{ report.get_absolute_url }}">{{ report.company }}</a>
        </li>
        {% endfor %}
-
      </ul>
      {% else %}
        <p>There are no reports listed.</p>
