@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h2>Private Messaging</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form1.as_p }}
+    <button type="submit">Send Message</button>
+  </form>
+{% endblock %}
