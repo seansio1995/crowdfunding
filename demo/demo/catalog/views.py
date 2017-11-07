@@ -47,3 +47,7 @@ def Login(request):
 
 def logout(request):
     return render(request, 'logged_out.html')
+
+
+def createreport(request):
+    
