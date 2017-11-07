@@ -35,7 +35,7 @@ def Login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid() is True:
-            return render(request, 'reports.html')
+            return render(request, 'user_home.html')
         else:
             return render(request, 'index.html')
     else:
@@ -47,7 +47,7 @@ def logout(request):
 
 def createreport(request):
     if request.method=="POST":
-        return redirect("home")
+        return redirect("index")
     return render(request,'createreport.html')
 
 
@@ -64,3 +64,6 @@ def messaging(request):
     else:
         form = SignUpForm
     return render(request, 'messaging.html', {'form': form})
+
+def loggedin(request):
+    return render(request,'user_home.html')
