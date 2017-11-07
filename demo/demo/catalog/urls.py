@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
 from . import views
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -14,5 +15,5 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^createreport/$', views.createreport, name='createreport'),
     url(r'^messaging/$', views.messaging, name='message'),
-        url(r'^loggedin/$', views.loggedin, name='userhome'),
+    url(r'^loggedin/$', views.loggedin, name='userhome'),
 ]
