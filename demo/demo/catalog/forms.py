@@ -18,3 +18,9 @@ class LoginForm(forms.Form):
     username = forms.CharField(max_length=30, required=True)
     password = forms.CharField(max_length=30, required=True)
 
+class GroupForm(forms.Form):
+    group_name = forms.CharField(max_length=30, required=True)
+
+class AddUser(forms.Form):
+    username = forms.CharField(max_length=30, required=True)
+    group_name = forms.CharField(max_length=30, required=True)

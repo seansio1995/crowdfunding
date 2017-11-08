@@ -1,9 +1,10 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm
-from django.contrib.auth.decorators import login_required
-# Create your views here.
+from .forms import SignUpForm, LoginForm, GroupForm, AddUser
+from django.contrib.auth.models import User,Group, Permission
+from django.contrib.contenttypes.models import ContentType
+
 
 
 
@@ -48,6 +49,8 @@ def Login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid() is True:
+            user = authenticate(username = request.POST.get('username'),password = request.POST.get('password'))
+            login(request,user)
             request.session['logged'] = True
             return render(request, 'user_home.html')
         else:
@@ -80,6 +83,59 @@ def messaging(request):
 def logout(request):
     request.session['logged'] = False
     return render(request, 'logged_out.html')
+
+def create_group(request):
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            if request.method == 'POST':
+                group_name = request.POST.get('group_name')
+                Group.objects.get_or_create(name=group_name)
+                return redirect('group')
+            else:
+                form1 = GroupForm
+                return render(request, 'creategroup.html', {'form1': form1})
+
+        else:
+            return redirect('login')
+    else:
+        return redirect('login')
+
+def group(request):
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            return render(request, 'group.html')
+        else:
+            return redirect('login')
+    else:
+        return redirect('login')
+
+def group_list(request):
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            groups = request.user.groups.all()
+            return render(request, 'group_list.html',{'groups':groups})
+        else:
+            return redirect('login')
+    else:
+        return redirect('login')
+
+def add_user_to_group(request):
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            if request.method == 'POST':
+                username = request.POST.get('username')
+                group_name = request.POST.get('group_name')
+            else:
+                form1 = AddUser
+                return render(request, 'group.html', {'form1': form1})
+
+            group = Group.objects.get(name = group_name)
+            group.user_set.add(User.objects.get(username=username))
+        else:
+            return redirect('login')
+    else:
+        return redirect('login')
+
 
 def loggedin(request):
     if 'logged' in request.session:

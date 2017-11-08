@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+             <ul class="sidebar-nav">
+     <li><a href={% url 'logout' %}> Log Out</a></li>
+              <li><a href={% url 'userhome' %}>Home</a></li>
+</ul>
+  <h2>Create Group</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form1.as_p }}
+    <button type="submit">Create Group</button>
+  </form>
+{% endblock %}

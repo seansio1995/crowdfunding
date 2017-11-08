@@ -8,12 +8,19 @@ from annoying.fields import AutoOneToOneField
 
 # Create your models here.
 
+
+#this model extends the Django default user model. It can be used to give attributes to users
+#like we need in our project specifications
+    #example use: in views.py if you want to deal with a company user -
+        #if request.user.is_company:
+            #whatever code here
 class profile(models.Model):
     user = AutoOneToOneField(User,primary_key=True)
     is_manager = models.BooleanField(default = False)
+        #the signup view will set this to True if the radio button Investor is chosen
     is_company = models.BooleanField(default = False)
-    is_active = models.BooleanField(default = False)
-
+        #if user's is_manager field is True, they can set another user's is_suspended to True
+    is_suspended = models.BooleanField(default=False)
 
 
 class Report(models.Model):
@@ -33,7 +40,7 @@ class Report(models.Model):
         ordering = ["company"]
 
     def __str__(self):
-        return self.Name
+        return self.company + 'report'
 
     def get_absolute_url(self):
         return reverse('model-detail-view', args=[str(self.id)])
