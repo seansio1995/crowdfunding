@@ -90,6 +90,8 @@ def create_group(request):
             if request.method == 'POST':
                 group_name = request.POST.get('group_name')
                 Group.objects.get_or_create(name=group_name)
+                g = Group.objects.get(name= group_name)
+                g.user_set.add(request.user)
                 return redirect('group')
             else:
                 form1 = GroupForm
@@ -113,7 +115,11 @@ def group_list(request):
     if 'logged' in request.session:
         if request.session['logged'] == True:
             groups = request.user.groups.all()
-            return render(request, 'group_list.html',{'groups':groups})
+            if len(groups) == 0:
+                has_group = False
+            else:
+                has_group = True
+            return render(request, 'group_list.html',{'groups':groups,'has_group':has_group})
         else:
             return redirect('login')
     else:
