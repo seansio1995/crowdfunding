@@ -23,4 +23,7 @@ urlpatterns = [
     url(r'^addsm/$', views.add_SM, name='addSM'),
     url(r'^deleteuser/$', views.delete_user, name='delete-user-g'),
     url(r'^adderror/$', views.add_error, name='add-error'),
+    url(r'^Suspend/$', views.suspend_user, name='suspend'),
+
+
 ]

@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+             <ul class="sidebar-nav">
+     <li><a href={% url 'logout' %}> Log Out</a></li>
+</ul>
+  <h2>Suspend A user</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form1.as_p }}
+    <button type="submit">Suspend</button>
+  </form>
+{% endblock %}

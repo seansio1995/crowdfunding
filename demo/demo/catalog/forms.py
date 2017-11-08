@@ -24,3 +24,6 @@ class GroupForm(forms.Form):
 class AddUser(forms.Form):
     username = forms.CharField(max_length=30, required=True)
     group_name = forms.CharField(max_length=30, required=True)
+
+class SuspendUser(forms.Form):
+    username = forms.CharField(max_length=30, required=True)

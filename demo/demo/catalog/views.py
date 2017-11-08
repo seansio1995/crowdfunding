@@ -1,7 +1,7 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, GroupForm, AddUser
+from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser
 from django.contrib.auth.models import User,Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from .models import Report
@@ -215,6 +215,19 @@ def delete_user(request):
 def add_error(request):
     #all you need here
     return render(request, 'add_user_error.html')
+
+def suspend_user(request):
+    #set user's is_suspended to true
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            if request.method == 'POST':
+                #this is where you will set the
+                #is_suspend to true
+                return redirect('managerhome')
+            else:
+                form1 = SuspendUser
+                return render(request, 'suspend_user.html', {'form1': form1})
+
 
 def messaging(request):
     #for viewing sent messages and chosing to send a new one
