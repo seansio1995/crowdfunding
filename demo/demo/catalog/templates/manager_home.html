@@ -1,0 +1,16 @@
+ {% extends "base_generic.html" %}
+
+{% block content %}
+             <ul class="sidebar-nav">
+     <li><a href={% url 'logout' %}> Log Out</a></li>
+</ul>
+     <h1>Welcome Back</h1>
+        <li><a href={% url 'SMrlist' %}>View all reports</a></li>
+    <li><a href={% url 'createreport' %}>Create Report</a></li>
+    <li><a href={% url 'create-group' %}>Create Group</a></li>
+        <li><a href={% url 'SMglist' %}>View all Groups</a></li>
+        <li><a href={% url 'add-user-g' %}>Add User to Group</a></li>
+     <li><a href={% url 'delete-user-g' %}>Delete user From Group</a></li>
+    <li><a href={% url 'addSM' %}>Add new site manager</a></li>
+
+{% endblock %}
