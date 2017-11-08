@@ -1,56 +1,20 @@
-from django.db import models
 from django.urls import reverse
+from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from annoying.fields import AutoOneToOneField
+
 
 # Create your models here.
-class Company(models.Model):
-    Username = models.CharField(max_length=20, help_text="Enter a username")
 
-    Company = models.IntegerField(help_text="Enter a Company Name")
-
-    class Meta:
-        ordering = ["Company"]
-
-    def __str__(self):
-        return self.Username
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-        """
-        return reverse('model-detail-view', args=[str(self.id)])
+class profile(models.Model):
+    user = AutoOneToOneField(User,primary_key=True)
+    is_manager = models.BooleanField(default = False)
+    is_company = models.BooleanField(default = False)
+    is_active = models.BooleanField(default = False)
 
 
-class Intevestor(models.Model):
-    UserName = models.CharField(max_length=20, help_text="Enter a username")
-
-
-    class Meta:
-        ordering = ["UserName"]
-
-    def __str__(self):
-        return self.UserName
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-        """
-        return reverse('model-detail-view', args=[str(self.id)])
-
-
-class Manager(models.Model):
-    UserName = models.CharField(max_length=20)
-
-    class Meta:
-        ordering = ["UserName"]
-
-    def __str__(self):
-        return self.UserName
-
-    def get_absolute_url(self):
-        """
-        Returns the url to access a particular instance of the model.
-        """
-        return reverse('model-detail-view', args=[str(self.id)])
 
 class Report(models.Model):
     company = models.CharField(max_length=30, help_text="Company name")
