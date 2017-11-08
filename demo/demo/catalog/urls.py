@@ -19,9 +19,8 @@ urlpatterns = [
     url(r'^viewG/$', views.group, name='group'),
     url(r'^addGuser/$', views.add_user_to_group, name='add-user-g'),
     url(r'^userG/$', views.group_list, name='Glist'),
-    url(r'^SMglist/$', views.group_list, name='SMglist'),
     url(r'^SMreportlist/$', views.report_list, name='SMrlist'),
     url(r'^manager/$', views.loggedin, name='managerhome'),
-    url(r'^addsm/$', views.loggedin, name='addSM'),
+    url(r'^addsm/$', views.add_SM, name='addSM'),
     url(r'^deleteuser/$', views.loggedin, name='delete-user-g'),
 ]

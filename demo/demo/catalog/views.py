@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, LoginForm, GroupForm, AddUser
 from django.contrib.auth.models import User,Group, Permission
 from django.contrib.contenttypes.models import ContentType
+from .models import Report
 
 
 
@@ -18,11 +19,12 @@ def signup(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            if 'Company' in request.POST:
-                user.is_company = True
+            if 'company' in request.POST:
+                user.profile.is_company = True
             else:
-                user.is_company = False
+                user.profile.is_company = False
+            user.profile.is_manager = True
+            login(request, user)
             return redirect('userhome')
     else:
         form = SignUpForm
@@ -32,7 +34,20 @@ def signup(request):
 def report_list(request):
     if 'logged' in request.session:
         if request.session['logged'] == True:
-            return render(request, 'reports.html')
+            if request.user.is_manager == True:
+                reports = Report.objects.all()
+                if len(reports) == 0:
+                    has_rep = False
+                else:
+                    has_rep = True
+                return render(request, 'reports.html',{'report_list':reports, 'reports':has_rep})
+            else:
+                reports = Report.objects.filter(created_by = request.user)
+                if len(reports) == 0:
+                    has_rep = False
+                else:
+                    has_rep = True
+                return render(request, 'reports.html', {'report_list': reports, 'reports':has_rep})
         else:
             return redirect('login')
     else:
@@ -52,7 +67,10 @@ def Login(request):
             user = authenticate(username = request.POST.get('username'),password = request.POST.get('password'))
             login(request,user)
             request.session['logged'] = True
-            return render(request, 'user_home.html')
+            if user.profile.is_manager == True:
+                return render(request, 'manager_home.html')
+            else:
+                return render(request, 'user_home.html')
         else:
             return render(request, 'index.html')
     else:
@@ -63,6 +81,8 @@ def Login(request):
 def createreport(request):
     if 'logged' in request.session:
         if request.session['logged'] == True:
+            #need to actually create a report model instance
+            #don't forget to set report.created_by to request.user
             return render(request, 'createreport.html')
         else:
             return redirect('login')
@@ -114,12 +134,20 @@ def group(request):
 def group_list(request):
     if 'logged' in request.session:
         if request.session['logged'] == True:
-            groups = request.user.groups.all()
-            if len(groups) == 0:
-                has_group = False
+            if request.user.is_manager == False:
+                groups = request.user.groups.all()
+                if len(groups) == 0:
+                    has_group = False
+                else:
+                    has_group = True
+                return render(request, 'group_list.html',{'groups':groups,'has_group':has_group})
             else:
-                has_group = True
-            return render(request, 'group_list.html',{'groups':groups,'has_group':has_group})
+                groups = User.objects.groups.all()
+                if len(groups) == 0:
+                    has_group = False
+                else:
+                    has_group = True
+                return render(request, 'group_list.html', {'groups': groups, 'has_group': has_group})
         else:
             return redirect('login')
     else:
@@ -146,9 +174,14 @@ def add_user_to_group(request):
 def loggedin(request):
     if 'logged' in request.session:
         if request.session['logged'] == True:
-            return render(request, 'user_home.html')
+            if request.user.is_manager == True:
+                return redirect(request,'manager_home.html')
+            else:
+                return render(request, 'user_home.html')
         else:
             return redirect('login')
     else:
         return redirect('login')
 
+def add_SM(request):
+    return render(request, 'add_SM.html')
