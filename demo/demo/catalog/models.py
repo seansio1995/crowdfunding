@@ -35,6 +35,8 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class Report(models.Model):
+    current_projects = models.CharField(default= "No current Projects",max_length= 1000, help_text="Projects")
+
     company = models.CharField(max_length=30, help_text="Company name")
 
     phone = models.CharField(max_length=20, help_text="Company phone number")
@@ -51,9 +53,15 @@ class Report(models.Model):
 
     objects = models.Manager()
 
+    #have to be able to mark reports as private
+    is_private = models.BooleanField(default = False)
 
+class Message(models.Model):
+    send_to_username = models.CharField(max_length= 30, help_text="Recipient")
 
+    send_from_username = models.ForeignKey(User, help_text="Sender")
 
+    message = models.CharField(max_length= 5000, help_text='message')
 
 
 

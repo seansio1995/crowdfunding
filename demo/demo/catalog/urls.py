@@ -13,7 +13,6 @@ urlpatterns = [
     url(r'^messaging/$', views.messaging, name = 'messaging'),
     url(r'^logout/$',views.logout,name='logout'),
     url(r'^createreport/$', views.createreport, name='createreport'),
-    url(r'^messaging/$', views.messaging, name='message'),
     url(r'^loggedin/$', views.loggedin, name='userhome'),
     url(r'^createG/$', views.create_group, name='create-group'),
     url(r'^viewG/$', views.group, name='group'),
@@ -22,5 +21,6 @@ urlpatterns = [
     url(r'^SMreportlist/$', views.report_list, name='SMrlist'),
     url(r'^manager/$', views.loggedin, name='managerhome'),
     url(r'^addsm/$', views.add_SM, name='addSM'),
-    url(r'^deleteuser/$', views.loggedin, name='delete-user-g'),
+    url(r'^deleteuser/$', views.delete_user, name='delete-user-g'),
+    url(r'^adderror/$', views.add_error, name='add-error'),
 ]
