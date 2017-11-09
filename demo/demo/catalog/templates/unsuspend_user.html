@@ -5,7 +5,7 @@
         <li><a href={% url 'logout' %}> Log Out</a></li>
                  <li><a href={% url 'managerhome' %}>Go Back</a></li>
 </ul>
-  <h2>Suspend A user</h2>
+  <h2>Unsuspend A user</h2>
   <form method="post">
     {% csrf_token %}
     {{ form1.as_p }}
