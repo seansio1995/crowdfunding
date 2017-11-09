@@ -1,5 +1,7 @@
 from django.conf.urls import url
 from . import views
+from django.conf import settings
+from django.contrib.auth.views import logout
 
 
 
@@ -10,7 +12,7 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^login/$', views.Login, name = 'login'),
     url(r'^messaging/$', views.messaging, name = 'messaging'),
-    url(r'^logout/$',views.logout,name='logout'),
+    url(r'^logout/$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     url(r'^createreport/$', views.createreport, name='createreport'),
     url(r'^loggedin/$', views.user_home, name='userhome'),
     url(r'^createG/$', views.create_group, name='create-group'),
