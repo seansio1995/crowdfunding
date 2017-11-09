@@ -14,7 +14,6 @@ urlpatterns = [
     url(r'^createreport/$', views.createreport, name='createreport'),
     url(r'^loggedin/$', views.user_home, name='userhome'),
     url(r'^createG/$', views.create_group, name='create-group'),
-    url(r'^viewG/$', views.group, name='group'),
     url(r'^addGuser/$', views.add_user_to_group, name='add-user-g'),
     url(r'^userG/$', views.group_list, name='Glist'),
     url(r'^manager/$', views.manager_home, name='managerhome'),

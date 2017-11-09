@@ -1,10 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base_generic.html" %}
 
-</body>
-</html>
+{% block content %}
+             <ul class="sidebar-nav">
+     <li><a href={% url 'logout' %}> Log Out</a></li>
+              <li><a href={% url 'managerhome' %}>Home</a></li>
+</ul>
+  <h2>Delete User</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form1.as_p }}
+    <button type="submit">Delete User</button>
+  </form>
+{% endblock %}

@@ -7,7 +7,6 @@ from django.contrib.contenttypes.models import ContentType
 from .models import Report
 
 
-
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -18,8 +17,10 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
             if 'company' in request.POST:
                 user.profile.is_company = True
+                user.save()
             else:
                 user.profile.is_company = False
+                user.save()
             login(request, user)
             return redirect('userhome')
     else:
@@ -107,6 +108,7 @@ def create_group(request):
                 Group.objects.get_or_create(name=group_name)
                 g = Group.objects.get(name= group_name)
                 g.user_set.add(request.user)
+                g.save()
                 if request.user.profile.is_manager == True:
                     return redirect('managerhome')
                 else:
@@ -119,16 +121,6 @@ def create_group(request):
                     return render(request, 'creategroup.html', {'form1': form1})
 
 
-        else:
-            return redirect('login')
-    else:
-        return redirect('login')
-
-def group(request):
-    if 'logged' in request.session:
-        if request.session['logged'] == True:
-
-            return render(request, 'group.html')
         else:
             return redirect('login')
     else:
@@ -172,6 +164,7 @@ def add_user_to_group(request):
 
                 group = Group.objects.get(name = group_name)
                 group.user_set.add(User.objects.get(username=username))
+                group.save()
                 return redirect('managerhome')
             else:
                 if request.method == 'POST':
@@ -185,6 +178,7 @@ def add_user_to_group(request):
                     return redirect('add-error')
                 else:
                     group.user_set.add(User.objects.get(username=username))
+                    group.save()
                     return redirect('userhome')
         else:
             return redirect('login')
@@ -214,14 +208,38 @@ def manager_home(request):
         return redirect('login')
 
 def add_SM(request):
-    #for manager adding another site manager
-        #not yet implemented
-    return render(request, 'add_SM.html')
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            if request.method == 'POST':
+                user = User.objects.get(username = request.POST.get('username'))
+                user.profile.is_manager = True
+                user.save()
+                return redirect('managerhome')
+            else:
+                form1 = SuspendUser
+                return render(request, 'add_SM.html', {'form1': form1})
+
 
 def delete_user(request):
-    #for manager deleting user from a group
-        #not yet implemented
-    return render(request, 'delete_user.html')
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            if request.method == 'POST':
+                username = request.POST.get('username')
+                group_name = request.POST.get('group_name')
+            else:
+                form1 = AddUser
+                return render(request, 'delete_user.html', {'form1': form1})
+
+            group = Group.objects.get(name = group_name)
+            group.user_set.add(User.objects.remove(username=username))
+            group.save()
+            return redirect('managerhome')
+
+        else:
+            return redirect('login')
+    else:
+        return redirect('login')
+
 
 def add_error(request):
     #all you need here
@@ -256,8 +274,9 @@ def unsuspend_user(request):
     if 'logged' in request.session:
         if request.session['logged'] == True:
             if request.method == 'POST':
-                user = User.objects.filter(username = request.POST.get('username'))
+                user = User.objects.get(username = request.POST.get('username'))
                 user.profile.is_suspended = False
+                user.save()
                 return redirect('managerhome')
             else:
                 form1 = unSuspendUser
