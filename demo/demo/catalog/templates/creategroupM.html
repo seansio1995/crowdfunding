@@ -3,12 +3,12 @@
 {% block content %}
              <ul class="sidebar-nav">
      <li><a href={% url 'logout' %}> Log Out</a></li>
-              <li><a href={% url 'userhome' %}>Home</a></li>
+              <li><a href={% url 'managerhome' %}>Home</a></li>
 </ul>
-  <h2>Add User</h2>
+  <h2>Create Group</h2>
   <form method="post">
     {% csrf_token %}
     {{ form1.as_p }}
-    <button type="submit">Add User</button>
+    <button type="submit">Create Group</button>
   </form>
 {% endblock %}

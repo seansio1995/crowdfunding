@@ -1,7 +1,7 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser
+from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser
 from django.contrib.auth.models import User,Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from .models import Report
@@ -33,13 +33,13 @@ def report_list(request):
         #if investor, you can see all reports by all companies
     if 'logged' in request.session:
         if request.session['logged'] == True:
-            if request.user.is_manager == True:
+            if request.user.profile.is_manager == True:
                 reports = Report.objects.all()
                 if len(reports) == 0:
                     has_rep = False
                 else:
                     has_rep = True
-                return render(request, 'reports.html',{'report_list':reports, 'reports':has_rep})
+                return render(request, 'reportsM.html',{'report_list':reports, 'reports':has_rep})
             else:
                 reports = Report.objects.filter(created_by = request.user)
                 if len(reports) == 0:
@@ -83,7 +83,10 @@ def createreport(request):
             #also need to check if request.user.profile.is_company is true. Investor users don't create reports
             #need to actually create a report model instance
             #don't forget to set report.created_by to request.user
-            return render(request, 'createreport.html')
+            if(request.user.profile.is_manager == True):
+                return render(request,'createreportM.html')
+            else:
+                return render(request, 'createreport.html')
         else:
             return redirect('login')
     else:
@@ -110,7 +113,11 @@ def create_group(request):
                     return redirect('userhome')
             else:
                 form1 = GroupForm
-                return render(request, 'creategroup.html', {'form1': form1})
+                if request.user.profile.is_manager == True:
+                    return render(request, 'creategroupM.html', {'form1': form1})
+                else:
+                    return render(request, 'creategroup.html', {'form1': form1})
+
 
         else:
             return redirect('login')
@@ -138,12 +145,12 @@ def group_list(request):
                     has_group = True
                 return render(request, 'group_list.html',{'groups':groups,'has_group':has_group})
             else:
-                groups = User.objects.groups.all()
+                groups = Group.objects.all()
                 if len(groups) == 0:
                     has_group = False
                 else:
                     has_group = True
-                return render(request, 'group_list.html', {'groups': groups, 'has_group': has_group})
+                return render(request, 'group_listM.html', {'groups': groups, 'has_group': has_group})
         else:
             return redirect('login')
     else:
@@ -161,7 +168,7 @@ def add_user_to_group(request):
                     group_name = request.POST.get('group_name')
                 else:
                     form1 = AddUser
-                    return render(request, 'add_to_group.html', {'form1': form1})
+                    return render(request, 'add_to_groupM.html', {'form1': form1})
 
                 group = Group.objects.get(name = group_name)
                 group.user_set.add(User.objects.get(username=username))
@@ -185,18 +192,22 @@ def add_user_to_group(request):
         return redirect('login')
 
 
-def loggedin(request):
-    #goes to user home if not manager and manager home otherwise
-
+def user_home(request):
     #needs to be edited to differentiate between investor and company user home page
         #user_home.html is company
         #investor_home.html is investor
     if 'logged' in request.session:
         if request.session['logged'] == True:
-            if request.user.profile.is_manager == True:
-                return redirect(request,'manager_home.html')
-            else:
-                return render(request, 'user_home.html')
+            return render(request, 'user_home.html')
+        else:
+            return redirect('login')
+    else:
+        return redirect('login')
+
+def manager_home(request):
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            return render(request,'manager_home.html')
         else:
             return redirect('login')
     else:
@@ -239,3 +250,15 @@ def messaging(request):
             return redirect('login')
     else:
         return redirect('login')
+
+def unsuspend_user(request):
+    #set user's is_suspended to true
+    if 'logged' in request.session:
+        if request.session['logged'] == True:
+            if request.method == 'POST':
+                user = User.objects.filter(username = request.POST.get('username'))
+                user.profile.is_suspended = False
+                return redirect('managerhome')
+            else:
+                form1 = unSuspendUser
+                return render(request, 'unsuspend_user.html', {'form1': form1})

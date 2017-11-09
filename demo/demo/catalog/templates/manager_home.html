@@ -5,7 +5,7 @@
      <li><a href={% url 'logout' %}> Log Out</a></li>
 </ul>
      <h1>Welcome Back</h1>
-        <li><a href={% url 'SMrlist' %}>View all reports</a></li>
+        <li><a href={% url 'reports' %}>View all reports</a></li>
     <li><a href={% url 'createreport' %}>Create Report</a></li>
     <li><a href={% url 'create-group' %}>Create Group</a></li>
         <li><a href={% url 'Glist' %}>View all Groups</a></li>
@@ -13,4 +13,5 @@
      <li><a href={% url 'delete-user-g' %}>Delete User From Group</a></li>
     <li><a href={% url 'addSM' %}>Add new site manager</a></li>
     <li><a href={% url 'suspend' %}>Suspend a User</a></li>
+        <li><a href={% url 'unsuspend' %}>Unsuspend a User</a></li>
 {% endblock %}

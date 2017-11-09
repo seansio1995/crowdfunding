@@ -27,3 +27,6 @@ class AddUser(forms.Form):
 
 class SuspendUser(forms.Form):
     username = forms.CharField(max_length=30, required=True)
+
+class unSuspendUser(forms.Form):
+    username = forms.CharField(max_length=30, required=True)
