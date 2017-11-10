@@ -1,6 +1,6 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser
 from django.contrib.auth.models import User,Group
 from .models import Report
@@ -79,6 +79,18 @@ def createreport(request):
     #don't forget to set report.created_by to request.user
     if(request.user.profile.is_manager == True):
         if request.method=="POST":
+            r=Report()
+            #r.report_no=request.POST['report_no']
+            #r.init_date=request.POST['init_date']
+            r.current_projects=request.POST['current_projects']
+            r.company=request.POST['company']
+            r.phone=request.POST['phone']
+            r.location=request.POST['location']
+            r.country=request.POST['country']
+            r.sector=request.POST['sector']
+            r.industry=request.POST['industry']
+            r.description=request.POST['description']
+            r.save()
             return render(request,'report_success.html')
         return render(request,'createreportM.html')
 
@@ -90,7 +102,10 @@ def createreport(request):
     else:
         return render (request, 'investor_home.html')
 
-
+@login_required(login_url = 'login')
+def view_report(request,Report):
+    report = get_object_or_404(Report)
+    return render(request,'view_report.html')
 
 @login_required(login_url = 'login')
 def create_group(request):

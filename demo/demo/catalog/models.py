@@ -54,6 +54,8 @@ class Report(models.Model):
 
     industry = models.CharField(max_length=30, help_text="Company industry")
 
+    description=models.CharField(max_length=3000,help_text="Project description")
+
     created_by = models.ForeignKey(User)
 
     objects = models.Manager()
