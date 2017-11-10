@@ -103,19 +103,19 @@ def createreport(request):
         return render (request, 'investor_home.html')
 
 @login_required(login_url = 'login')
-def viewreport(request,Report):
+def viewreport(request):
     #report = get_object_or_404(Report)
-    report=Report.objects.all()[-1]
+    report=Report.objects.all()[0]
     return render(request,'view_report.html',{
-    report:"report"
+    "report":report
 })
 
 
 @login_required(login_url = 'login')
-def viewallreport(request,Report):
+def viewallreport(request):
     #Not implemented yet
     #report = get_object_or_404(Report)
-    report=Report.objects.all()[-1]
+    report=Report.objects.all()[0]
     return render(request,'view_report.html',{
     report:"report"
 })
