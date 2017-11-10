@@ -78,11 +78,15 @@ def createreport(request):
     #need to actually create a report model instance
     #don't forget to set report.created_by to request.user
     if(request.user.profile.is_manager == True):
+        if request.method=="POST":
+            return render(request,'report_success.html')
         return render(request,'createreportM.html')
-    else:
-        return render(request, 'createreport.html')
-    if(request.user.profile.is_company == True):
-        return render(request, 'user_home.html')
+
+    elif(request.user.profile.is_company == True):
+        if request.method == 'POST':
+            return render(request,"report_success.html")
+        return render(request, 'createreport.html',{})
+        #return render(request, 'user_home.html')
     else:
         return render (request, 'investor_home.html')
 
