@@ -84,6 +84,10 @@ def createreport(request):
         return render(request,'createreportM.html')
     else:
         return render(request, 'createreport.html')
+    if(request.user.profile.is_company == True):
+        return render(request, 'user_home.html')
+    else:
+        return render (request, 'investor_home.html')
 
 
 
