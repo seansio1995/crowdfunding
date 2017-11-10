@@ -1,5 +1,6 @@
 {% extends "base_generic.html" %}
 {% block content %}
+{% for report in report_list reversed %}
 <h2>
 Company Name: {{report.company}}
 </h2>
@@ -28,4 +29,7 @@ Industry: {{report.industry}}
   Project Description:
   {{report.description}}
 </h2>
+
+<h2><b>-------------------------------------------------------------------</b></h2>
+{% endfor %}
 {% endblock %}

@@ -115,9 +115,10 @@ def viewreport(request):
 def viewallreport(request):
     #Not implemented yet
     #report = get_object_or_404(Report)
+    report_list=Report.objects.all()
     report=Report.objects.all()[0]
-    return render(request,'view_report.html',{
-    report:"report"
+    return render(request,'view_all_report.html',{
+    "report_list":report_list
 })
 
 
