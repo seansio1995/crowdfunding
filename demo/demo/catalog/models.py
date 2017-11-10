@@ -38,7 +38,7 @@ def save_user_profile(sender, instance, **kwargs):
 class Report(models.Model):
     report_no = models.AutoField(primary_key=True)
 
-    init_date = models.DateTimeField(default=timezone.now)
+    #init_date = models.DateTimeField(default=timezone.now)
 
     current_projects = models.CharField(default= "No current Projects",max_length= 1000, help_text="Projects")
 
@@ -48,17 +48,17 @@ class Report(models.Model):
 
     location = models.CharField(max_length=20, help_text="Company location")
 
-    country = models.CharField(max_length=30, help_text="Company country")
+    country = models.CharField(max_length=30,help_text="Company country")
 
     sector = models.CharField(max_length=30, help_text="Company sector")
 
     industry = models.CharField(max_length=30, help_text="Company industry")
 
-    description=models.CharField(max_length=3000,help_text="Project description")
+    description=models.CharField(default="No description yet",max_length=3000,help_text="Project description")
 
-    created_by = models.ForeignKey(User)
+    #created_by = models.ForeignKey(User)
 
-    objects = models.Manager()
+    #objects = models.Manager()
 
     #have to be able to mark reports as private
     is_private = models.BooleanField(default = False)
