@@ -31,10 +31,7 @@ def signup(request):
 
 @login_required(login_url='login')
 def report_list(request):
-    #this needs to be edited to check for company or investor user
-        #if company, only see your own companies' reports
-        #if investor, you can see all reports by all companies
-    if request.user.profile.is_manager == True:
+    if request.user.profile.is_manager == True or request.user.profile.is_company == False:
         reports = Report.objects.all()
         if len(reports) == 0:
             has_rep = False
@@ -84,6 +81,10 @@ def createreport(request):
         return render(request,'createreportM.html')
     else:
         return render(request, 'createreport.html')
+    if(request.user.profile.is_company == True):
+        return render(request, 'user_home.html')
+    else:
+        return render (request, 'investor_home.html')
 
 
 
@@ -191,7 +192,7 @@ def delete_user(request):
         return render(request, 'delete_user.html', {'form1': form1})
 
     group = Group.objects.get(name = group_name)
-    group.user_set.add(User.objects.remove(username=username))
+    group.user_set.remove(User.objects.get(username=username))
     group.save()
     return redirect('managerhome')
 
