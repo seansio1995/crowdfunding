@@ -3,7 +3,8 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-
+from django.utils import timezone
+import datetime
 
 
 # Create your models here.
@@ -35,6 +36,10 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
 class Report(models.Model):
+    report_no = models.AutoField(primary_key=True)
+
+    init_date = models.DateTimeField(default=timezone.now)
+
     current_projects = models.CharField(default= "No current Projects",max_length= 1000, help_text="Projects")
 
     company = models.CharField(max_length=30, help_text="Company name")
@@ -62,7 +67,3 @@ class Message(models.Model):
     send_from_username = models.ForeignKey(User, help_text="Sender")
 
     message = models.CharField(max_length= 5000, help_text='message')
-
-
-
-

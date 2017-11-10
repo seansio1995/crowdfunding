@@ -1,20 +1,31 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-             <ul class="sidebar-nav">
-     <li><a href={% url 'logout' %}> Log Out</a></li>
-              <li><a href={% url 'managerhome' %}>Home</a></li>
-</ul>
-<form action="/your-name/" method="post">
-    <label for="company_name">Company Name: </label>
-    <input id="" type="text" name="company_name" value="{{ company_name }}">
-    <label for="funding_goal">Funding Goal: </label>
-    <input id="" type="text" name="funding_goal" value="{{ funding_goal }}">
-  </br>
-    <textarea rows="150" cols="100">
-    Enter your report here
-    </textarea>
-    <input type="submit" value="Submit Report">
-</form>
+
+<div>
+    <h2>Company Report</h2><br>
+    <form action="{% url 'report:create_report' %}" method="post" enctype="multipart/form-data" class="col-lg-5">
+        {% csrf_token %}
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Name</label>
+            <input class="form-control" type="text" id="company_name"  name="company_name" placeholder="Enter Company Name">
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Funding Goal</label>
+            <input class="form-control" type="text" id="funding_goal"  name="funding_goal" placeholder="Enter Your Funding Goal">
+          </div>
+
+          <div class="form-group">
+          <label>Report</label>
+            <textarea class="form-control" rows="30" name="report_description" id="report_description" placeholder="Enter description"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary hh-btn">Submit Report</button>
+
+
+      </form>
+</div>
 
 {% endblock %}
