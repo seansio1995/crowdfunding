@@ -1,6 +1,6 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser
 from django.contrib.auth.models import User,Group
 from .models import Report
@@ -77,19 +77,49 @@ def createreport(request):
     #also need to check if request.user.profile.is_company is true. Investor users don't create reports
     #need to actually create a report model instance
     #don't forget to set report.created_by to request.user
-    if(request.user.profile.is_manager == True):
+    if request.user.profile.is_manager == True or request.user.profile.is_company == True:
         if request.method=="POST":
+            r=Report()
+            #r.report_no=request.POST['report_no']
+            #r.init_date=request.POST['init_date']
+            r.current_projects=request.POST.get('current_projects')
+            r.company=request.POST.get('company')
+            r.phone=request.POST.get('phone')
+            r.location=request.POST.get('location')
+            r.country=request.POST.get('country')
+            r.sector=request.POST.get('sector')
+            r.industry=request.POST.get('industry')
+            r.description=request.POST.get('description')
+            r.save()
             return render(request,'report_success.html')
         return render(request,'createreportM.html')
 
-    elif(request.user.profile.is_company == True):
-        if request.method == 'POST':
-            return render(request,"report_success.html")
-        return render(request, 'createreport.html',{})
+    # elif(request.user.profile.is_company == True):
+    #     if request.method == 'POST':
+    #         return render(request,"report_success.html")
+    #     return render(request, 'createreport.html',{})
         #return render(request, 'user_home.html')
     else:
         return render (request, 'investor_home.html')
 
+@login_required(login_url = 'login')
+def viewreport(request):
+    #report = get_object_or_404(Report)
+    report=Report.objects.all()[0]
+    return render(request,'view_report.html',{
+    "report":report
+})
+
+
+@login_required(login_url = 'login')
+def viewallreport(request):
+    #Not implemented yet
+    #report = get_object_or_404(Report)
+    report_list=Report.objects.all()
+    report=Report.objects.all()[0]
+    return render(request,'view_all_report.html',{
+    "report_list":report_list
+})
 
 
 @login_required(login_url = 'login')

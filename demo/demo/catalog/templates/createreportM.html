@@ -4,12 +4,12 @@
 
 <div>
     <h2>Company Report</h2><br>
-    <form action="{% url 'report:create_report' %}" method="post" enctype="multipart/form-data" class="col-lg-5">
+    <form action="" method="post" enctype="multipart/form-data" class="col-lg-5">
         {% csrf_token %}
 
           <div class="form-group">
             <label class="form-control-label" for="company_name">Company Name</label>
-            <input class="form-control" type="text" id="company_name"  name="company_name" placeholder="Enter Company Name">
+            <input class="form-control" type="text" id="company_name"  name="company" placeholder="Enter Company Name">
           </div>
 
           <div class="form-group">
@@ -18,8 +18,38 @@
           </div>
 
           <div class="form-group">
+            <label class="form-control-label" for="company_name">Current Projects</label>
+            <input class="form-control" type="text" id="current_projects"  name="current_projects" placeholder="Enter Your Current Projects">
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Phone Number</label>
+            <input class="form-control" type="text" id="phone"  name="phone" placeholder="Enter your Phone Number">
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Location</label>
+            <input class="form-control" type="text" id="location"  name="location" placeholder="Enter Your Company Location">
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Country</label>
+            <input class="form-control" type="text" id="country"  name="country" placeholder="Enter Your Company Country">
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Sector</label>
+            <input class="form-control" type="text" id="funding_goal"  name="sector" placeholder="Enter Your Company Sector">
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Industry</label>
+            <input class="form-control" type="text" id="funding_goal"  name="industry" placeholder="Enter Your Company Industry">
+          </div>
+
+          <div class="form-group">
           <label>Report</label>
-            <textarea class="form-control" rows="30" name="report_description" id="report_description" placeholder="Enter description"></textarea>
+            <textarea class="form-control" rows="30" name="description" id="description" placeholder="Enter description"></textarea>
           </div>
 
           <button type="submit" class="btn btn-primary hh-btn">Submit Report</button>
