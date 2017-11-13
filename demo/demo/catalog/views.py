@@ -1,9 +1,9 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser
+from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm
 from django.contrib.auth.models import User,Group
-from .models import Report
+from .models import Report, Message
 from django.contrib.auth.decorators import login_required
 
 
@@ -265,3 +265,33 @@ def unsuspend_user(request):
     else:
         form1 = unSuspendUser
         return render(request, 'unsuspend_user.html', {'form1': form1})
+
+
+#@csrf_protect
+def send_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            receiver= (form.cleaned_data['receiver']).strip()
+            sender = request.user.username
+            message = Message.objects.create(
+                    message=message, sender=sender,receiver=receiver)
+            return render(request,"send_message_success.html")
+    else:
+        return render(
+                request,
+                'send_message.html',
+                {'form': MessageForm()})
+
+
+
+
+#@csrf_protect
+def receive_message(request):
+    messages = Message.objects.filter(receiver=request.user.username)
+    return render(
+            request,
+            'receive_message.html',
+            {'messages': messages}
+        )

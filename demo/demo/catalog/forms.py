@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
@@ -30,3 +31,8 @@ class SuspendUser(forms.Form):
 
 class unSuspendUser(forms.Form):
     username = forms.CharField(max_length=30, required=True)
+
+
+class MessageForm(forms.Form):
+    receiver = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'max_length': 255}))
+    message = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'max_length': 255}))

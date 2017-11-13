@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+{% for message in messages reversed %}
+
+<h2>Sender:{{message.sender}}</h2>
+<h2>Message: {{message.message}}</h2>
+<h6>Next Message------------------------------------------------------</h2>
+{% endfor %}
+
+{% endblock %}

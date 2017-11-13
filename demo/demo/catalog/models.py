@@ -64,8 +64,8 @@ class Report(models.Model):
     is_private = models.BooleanField(default = False)
 
 class Message(models.Model):
-    send_to_username = models.CharField(max_length= 30, help_text="Recipient")
+    receiver = models.CharField(max_length= 30, help_text="Receiver",default="")
 
-    send_from_username = models.ForeignKey(User, help_text="Sender")
+    sender = models.CharField(max_length=30, help_text="Sender",default="")
 
-    message = models.CharField(max_length= 5000, help_text='message')
+    message = models.CharField(max_length= 5000, help_text='message',default="")
