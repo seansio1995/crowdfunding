@@ -295,3 +295,6 @@ def receive_message(request):
             'receive_message.html',
             {'messages': messages}
         )
+
+def gohome(request):
+    return render(request,"manager_home.html")
