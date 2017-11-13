@@ -297,4 +297,7 @@ def receive_message(request):
         )
 
 def gohome(request):
+    # if request.user.profile.is_manager:
     return render(request,"manager_home.html")
+    # elif request.user.profile.is_company:
+    #     return render(request,"user_home.html")
