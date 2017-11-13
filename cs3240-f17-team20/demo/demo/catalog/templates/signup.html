@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+             <ul class="sidebar-nav">
+     <li><a href={% url 'login' %}>Already have an account?</a></li>
+                  <li><a href={% url 'index' %}>Home</a></li>
+</ul>
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+{% endblock %}
