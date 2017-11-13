@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+<h2><a href={% url 'gohome' %}>Go Back</a></h2>
 {% for message in messages reversed %}
 
 <h2>Sender:{{message.sender}}</h2>

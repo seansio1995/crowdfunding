@@ -1,5 +1,6 @@
 {% extends "base_generic.html" %}
 {% block content %}
+<h2><a href={% url 'gohome' %}>Go Back</a></h2>
 {% for report in report_list reversed %}
 <h2>
 Company Name: {{report.company}}

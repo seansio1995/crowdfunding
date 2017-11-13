@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^UnSuspend/$', views.unsuspend_user, name='unsuspend'),
     url(r'^sendmessage/$',views.send_message,name="sendmessage"),
     url(r'^receivemessage/$',views.receive_message,name="receivemessage"),
+    url(r'gohome/$',views.gohome,name="gohome")
 ]

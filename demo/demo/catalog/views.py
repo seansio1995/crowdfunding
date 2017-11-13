@@ -295,3 +295,10 @@ def receive_message(request):
             'receive_message.html',
             {'messages': messages}
         )
+
+
+def gohome(request):
+    if request.user.profile.is_manager == True:
+        return render(request,"manager_home.html")
+    else:
+        return render(request,"user_home.html")
