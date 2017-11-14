@@ -306,4 +306,4 @@ def gohome(request):
     elif request.user.profile.is_company:
         return render(request,"user_home.html")
     else:
-        return render(request,"Investor_home.html")
+        return render(request,"investor_home.html")
