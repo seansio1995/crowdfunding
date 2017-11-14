@@ -64,8 +64,11 @@ def Login(request):
             login(request,user)
             if user.profile.is_manager == True:
                 return render(request, 'manager_home.html')
-            else:
+            elif user.profile.is_company == True :
                 return render(request, 'user_home.html')
+            else:
+                return render(request,'investor_home.html')
+
         else:
             return render(request, 'index.html')
     else:
@@ -99,8 +102,8 @@ def createreport(request):
     #         return render(request,"report_success.html")
     #     return render(request, 'createreport.html',{})
         #return render(request, 'user_home.html')
-    else:
-        return render (request, 'investor_home.html')
+    # else:
+    #     return render (request, 'investor_home.html')
 
 @login_required(login_url = 'login')
 def viewreport(request):
@@ -300,5 +303,7 @@ def receive_message(request):
 def gohome(request):
     if request.user.profile.is_manager == True:
         return render(request,"manager_home.html")
-    else:
+    elif request.user.profile.is_company:
         return render(request,"user_home.html")
+    else:
+        return render(request,"Investor_home.html")
