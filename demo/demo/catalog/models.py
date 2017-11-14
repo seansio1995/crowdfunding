@@ -22,7 +22,7 @@ class profile(models.Model):
 
     #the signup view will set this to True if the radio button Investor is chosen
     is_company = models.BooleanField(default = False)
-
+    is_investor=models.BooleanField(default=False)
     #if user's is_manager field is True, they can set another user's is_suspended to True
     is_suspended = models.BooleanField(default=False)
 

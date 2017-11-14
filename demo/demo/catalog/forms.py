@@ -9,7 +9,7 @@ class SignUpForm(UserCreationForm):
     user_type = forms.MultipleChoiceField(
         required = True,
         widget = forms.RadioSelect(),
-        choices = (("Company","company"),("Investor","investor"))
+        choices = [("company","company"),("investor","investor")]
     )
     class Meta:
         model = User
@@ -35,4 +35,4 @@ class unSuspendUser(forms.Form):
 
 class MessageForm(forms.Form):
     receiver = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'max_length': 255}))
-    message = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'max_length': 255}))
+    message = forms.CharField(widget=forms.Textarea)

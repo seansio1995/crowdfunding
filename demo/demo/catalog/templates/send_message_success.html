@@ -1,20 +1,9 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+<h2><a href={% url 'gohome' %}>Go Back</a></h2>
             <ul class="sidebar-nav">
     <li><a href={% url 'logout' %}> Log Out</a></li>
 </ul>
     <h1>Message Sent Successfully!</h1>
-       <li><a href={% url 'viewallreport' %}>View all reports</a></li>
-   <li><a href={% url 'createreport' %}>Create Report</a></li>
-   <li><a href={% url 'viewreport' %}>View Report</a></li>
-   <li><a href={% url 'sendmessage' %}>Send Message</a></li>
-   <li><a href={% url 'receivemessage' %}>Receive Message</a></li>
-   <li><a href={% url 'create-group' %}>Create Group</a></li>
-       <li><a href={% url 'Glist' %}>View all Groups</a></li>
-       <li><a href={% url 'add-user-g' %}>Add User to Group</a></li>
-    <li><a href={% url 'delete-user-g' %}>Delete User From Group</a></li>
-   <li><a href={% url 'addSM' %}>Add new site manager</a></li>
-   <li><a href={% url 'suspend' %}>Suspend a User</a></li>
-       <li><a href={% url 'unsuspend' %}>Unsuspend a User</a></li>
 {% endblock %}

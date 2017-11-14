@@ -15,15 +15,19 @@ def signup(request):
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
+            #user_type=form.cleaned_data["user_type"]
+            #reason = form.cleaned_data['reason']
+            #user_type = dict(form.fields['user_type'].choices)[user_type]
+            user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
-            if 'company' in request.POST:
+            if user_type=="company":
                 user.profile.is_company = True
                 user.save()
             else:
-                user.profile.is_company = False
+                user.profile.is_investor = True
                 user.save()
             login(request, user)
-            return redirect('userhome')
+            return redirect('gohome')
     else:
         form = SignUpForm
     return render(request, 'signup.html', {'form': form})
@@ -292,11 +296,26 @@ def send_message(request):
 
 #@csrf_protect
 def receive_message(request):
+    if request.method=="POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            receiver= (form.cleaned_data['receiver']).strip()
+            sender = request.user.username
+            message = Message.objects.create(
+                    message=message, sender=sender,receiver=receiver)
+            messages = Message.objects.filter(receiver=request.user.username)
+            return render(
+                    request,
+                    'receive_message.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
+
     messages = Message.objects.filter(receiver=request.user.username)
     return render(
             request,
             'receive_message.html',
-            {'messages': messages}
+            {'messages': messages,'form':MessageForm()}
         )
 
 
@@ -306,4 +325,4 @@ def gohome(request):
     elif request.user.profile.is_company:
         return render(request,"user_home.html")
     else:
-        return render(request,"Investor_home.html")
+        return render(request,"investor_home.html")

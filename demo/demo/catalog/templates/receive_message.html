@@ -6,6 +6,14 @@
 
 <h2>Sender:{{message.sender}}</h2>
 <h2>Message: {{message.message}}</h2>
+<br/>
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+            <table>
+            {{ form}}
+            </table>
+            <input type="submit" class = "submit" value="Send Message" />
+        </form>
+        <br />
 <h6>Next Message------------------------------------------------------</h2>
 {% endfor %}
 
