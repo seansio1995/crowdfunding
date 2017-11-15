@@ -44,6 +44,8 @@ class Report(models.Model):
 
     company = models.CharField(max_length=30, help_text="Company name")
 
+    funding_goal = models.CharField(max_length=20, help_text="Funding goal", default="10,000")
+
     phone = models.CharField(max_length=20, help_text="Company phone number")
 
     location = models.CharField(max_length=20, help_text="Company location")

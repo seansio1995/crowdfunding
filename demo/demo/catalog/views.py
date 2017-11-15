@@ -87,7 +87,6 @@ def createreport(request):
     if request.user.profile.is_manager == True or request.user.profile.is_company == True:
         if request.method=="POST":
             r=Report()
-            #r.report_no=request.POST['report_no']
             #r.init_date=request.POST['init_date']
             r.current_projects=request.POST.get('current_projects')
             r.company=request.POST.get('company')
@@ -97,6 +96,7 @@ def createreport(request):
             r.sector=request.POST.get('sector')
             r.industry=request.POST.get('industry')
             r.description=request.POST.get('description')
+            # r.report_no=request.POST('report_no')
             r.save()
             return render(request,'report_success.html')
         return render(request,'createreportM.html')
@@ -108,6 +108,26 @@ def createreport(request):
         #return render(request, 'user_home.html')
     # else:
     #     return render (request, 'investor_home.html')
+
+@login_required(login_url = 'login')
+def edit_report(request, pk):
+    r = Report.objects.get(pk=pk)
+    return render(request, 'edit_report.html', {'report':r})
+
+@login_required(login_url='login')
+def finish_edit(request, pk):
+    r = Report.objects.get(pk=pk)
+    r.current_projects = request.POST.get('current_projects')
+    r.company = request.POST.get('company')
+    r.phone = request.POST.get('phone')
+    r.location = request.POST.get('location')
+    r.country = request.POST.get('country')
+    r.sector = request.POST.get('sector')
+    r.industry = request.POST.get('industry')
+    r.description = request.POST.get('description')
+    r.save()
+    return render(request, 'report_success.html')
+
 
 @login_required(login_url = 'login')
 def viewreport(request):
@@ -127,6 +147,7 @@ def viewallreport(request):
     return render(request,'view_all_report.html',{
     "report_list":report_list
 })
+
 
 
 @login_required(login_url = 'login')
