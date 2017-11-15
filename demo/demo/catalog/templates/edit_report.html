@@ -1,0 +1,62 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h2><a href={% url 'gohome' %}>Go Back</a></h2>
+<div>
+
+    <h2>Company Report</h2><br>
+    <form action="{% url 'finish_edit' report.pk %}" method="post" enctype="multipart/form-data" class="col-lg-5">
+        {% csrf_token %}
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Name</label>
+            <input class="form-control" type="text" id="company_name"  name="company" value={{report.company}}>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Funding Goal</label>
+            <input class="form-control" type="text" id="funding_goal"  name="funding_goal" value={{report.funding_goal}}>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Current Projects</label>
+            <input class="form-control" type="text" id="current_projects"  name="current_projects" value={{report.current_projects}}>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Phone Number</label>
+            <input class="form-control" type="text" id="phone"  name="phone" value={{report.phone}}>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Location</label>
+            <input class="form-control" type="text" id="location"  name="location" value={{report.location}}>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Country</label>
+            <input class="form-control" type="text" id="country"  name="country" value={{report.country}}>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Sector</label>
+            <input class="form-control" type="text" id="funding_goal"  name="sector" value={{report.sector}}>
+          </div>
+
+          <div class="form-group">
+            <label class="form-control-label" for="company_name">Company Industry</label>
+            <input class="form-control" type="text" id="funding_goal"  name="industry" value={{report.industry}}>
+          </div>
+
+          <div class="form-group">
+          <label>Report</label>
+            <textarea class="form-control" rows="30" name="description" id="description" value={{report.description}}></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary hh-btn">Submit Report</button>
+
+
+      </form>
+</div>
+
+{% endblock %}

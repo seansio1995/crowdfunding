@@ -27,8 +27,16 @@ Industry: {{report.industry}}
 </h2>
 
 <h2>
+    Funding goal: {{ report.funding_goal }}
+</h2>
+
+<h2>
   Project Description:
   {{report.description}}
+</h2>
+
+<h2>
+    <a href={% url 'edit_report' report.pk %}>Edit this report</a>
 </h2>
 
 <h2><b>-------------------------------------------------------------------</b></h2>
