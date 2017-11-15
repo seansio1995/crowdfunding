@@ -130,9 +130,9 @@ def finish_edit(request, pk):
 
 
 @login_required(login_url = 'login')
-def viewreport(request):
+def viewreport(request,pk):
     #report = get_object_or_404(Report)
-    report=Report.objects.all()[0]
+    report=Report.objects.get(pk=pk)
     return render(request,'view_report.html',{
     "report":report
 })
@@ -143,7 +143,7 @@ def viewallreport(request):
     #Not implemented yet
     #report = get_object_or_404(Report)
     report_list=Report.objects.all()
-    report=Report.objects.all()[0]
+    #report=Report.objects.all()[0]
     return render(request,'view_all_report.html',{
     "report_list":report_list
 })

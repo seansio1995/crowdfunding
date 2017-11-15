@@ -14,7 +14,9 @@ urlpatterns = [
     url(r'^messaging/$', views.messaging, name = 'messaging'),
     url(r'^logout/$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     url(r'^createreport/$', views.createreport, name='createreport'),
-    url(r'^viewreport/$', views.viewreport, name='viewreport'),
+    url(r'^viewreport/(?P<pk>[0-9]+)/$', views.viewreport, name='viewreport'),
+    url(r'^viewreport/(?P<pk>[0-9]+)/$', views.edit_report, name='viewreport'),
+    url(r'^viewreport/(?P<pk>[0-9]+)/success/$', views.viewreport, name='viewreport'),
     url(r'^viewallreport/$', views.viewallreport, name='viewallreport'),
     url(r'^viewallreport/(?P<pk>[0-9]+)/$', views.edit_report, name='edit_report'),
     url(r'^viewallreport/(?P<pk>[0-9]+)/success/$', views.finish_edit, name='finish_edit'),
@@ -30,5 +32,5 @@ urlpatterns = [
     url(r'^UnSuspend/$', views.unsuspend_user, name='unsuspend'),
     url(r'^sendmessage/$',views.send_message,name="sendmessage"),
     url(r'^receivemessage/$',views.receive_message,name="receivemessage"),
-    url(r'gohome/$',views.gohome,name="gohome"),
+    url(r'^gohome/$',views.gohome,name="gohome"),
 ]
