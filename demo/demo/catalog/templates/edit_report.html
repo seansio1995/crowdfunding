@@ -5,7 +5,7 @@
 <div>
 
     <h2>Company Report</h2><br>
-    <form action="{% url 'finish_edit' report.pk %}" method="post" enctype="multipart/form-data" class="col-lg-5">
+    <form action="{% url 'finish_edit' report.pk %}" method="post" enctype="multipart/form-data" class="col-lg-5" id="edit_report">
         {% csrf_token %}
 
           <div class="form-group">
@@ -48,15 +48,20 @@
             <input class="form-control" type="text" id="funding_goal"  name="industry" value={{report.industry}}>
           </div>
 
-          <div class="form-group">
-          <label>Report</label>
-            <textarea class="form-control" rows="30" name="description" id="description" value={{report.description}}></textarea>
-          </div>
 
           <button type="submit" class="btn btn-primary hh-btn">Submit Report</button>
 
 
       </form>
+
+    <br>
+
+      <div class="form-group">
+      <label>Report</label>
+        <textarea form="edit_report" wrap="soft" class="form-control" rows="30" name="description" id="description" value={{report.description}}></textarea>
+      </div>
+
+
 </div>
 
 {% endblock %}
