@@ -320,8 +320,7 @@ def deletemessage(request):
         messages = Message.objects.all()
         for message in messages: 
             message.delete()
-        return redirect('deletemessage.html')
-    
+        return render(request,"deletemessage.html")    
     
     ####
 
