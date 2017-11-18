@@ -320,7 +320,7 @@ def delete_message(request):
         messages = Message.objects.all()
         for message in messages: 
             message.delete()
-        return redirect('messages')
+        return redirect('delete_message.html')
     
     
     ####
