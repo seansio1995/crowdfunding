@@ -316,7 +316,7 @@ def send_message(request):
     
 #@csrf_protect
 def deletemessage(request):
-    if(request.GET.get('delete')):
+    if request.method == 'POST':
         messages = Message.objects.all()
         for message in messages: 
             message.delete()
