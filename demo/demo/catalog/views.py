@@ -316,18 +316,12 @@ def send_message(request):
     
 #@csrf_protect
 def delete_message(request):
-    if request.method == 'POST':
-        ####list all messages
-        messages = Message.objects.filter(receiver=request.user.username)
-        return render(
-                    request,
-                    'receive_message.html',
-                    {'messages': messages,'form':MessageForm()}
-                )
+    if(request.GET.get('mybtn')):
         messages = Message.objects.all()
         for message in messages: 
             message.delete()
         return redirect('messages')
+    
     
     ####
 
