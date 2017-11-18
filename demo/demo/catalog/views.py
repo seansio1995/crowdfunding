@@ -312,8 +312,24 @@ def send_message(request):
                 'send_message.html',
                 {'form': MessageForm()})
 
-
-
+    #####
+    
+#@csrf_protect
+def delete_message(request):
+    if request.method == 'POST':
+        ####list all messages
+        messages = Message.objects.filter(receiver=request.user.username)
+        return render(
+                    request,
+                    'receive_message.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
+        messages = Message.objects.all()
+        for message in messages: 
+            message.delete()
+        return redirect('messages')
+    
+    ####
 
 #@csrf_protect
 def receive_message(request):
