@@ -5,6 +5,9 @@ from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSus
 from django.contrib.auth.models import User,Group
 from .models import Report, Message
 from django.contrib.auth.decorators import login_required
+from Crypto import Random
+from Crypto.PublicKey import RSA
+import Crypto
 
 
 
@@ -20,6 +23,10 @@ def signup(request):
             #user_type = dict(form.fields['user_type'].choices)[user_type]
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
+            keypair = KeyPair.objects.create(
+                user=user,RSAkey=RSA.generate(2048,Random.new().read)
+            )
+
             if user_type=="company":
                 user.profile.is_company = True
                 user.save()
@@ -303,8 +310,13 @@ def send_message(request):
             message = form.cleaned_data['message']
             receiver= (form.cleaned_data['receiver']).strip()
             sender = request.user.username
+            encrypt=form.cleaned_data['encrypt']
+            if encrypt:
+                receiver_keypair=KeyPair.objects.get(user=receiver).RSAkey
+                receiver_pubkey=receiver_keypair.publickey()
+                message=receiver_pubkey.encrypt(message,32)
             message = Message.objects.create(
-                    message=message, sender=sender,receiver=receiver)
+                    message=message, sender=sender,receiver=receiver,encrypt=encrypt)
             return render(request,"send_message_success.html")
     else:
         return render(
@@ -322,10 +334,12 @@ def receive_message(request):
         if form.is_valid():
             message = form.cleaned_data['message']
             receiver= (form.cleaned_data['receiver']).strip()
+            encrypt=form.cleaned_data['encrypt']
             sender = request.user.username
             message = Message.objects.create(
-                    message=message, sender=sender,receiver=receiver)
+                    message=message, sender=sender,receiver=receiver,encrypt=encrypt)
             messages = Message.objects.filter(receiver=request.user.username)
+
             return render(
                     request,
                     'receive_message.html',
@@ -338,6 +352,38 @@ def receive_message(request):
             'receive_message.html',
             {'messages': messages,'form':MessageForm()}
         )
+
+def decrypt_message(request):
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = Message.objects.get(id=form.cleaned_data['message'])
+            if encrypt:
+                receiver_keypair=KeyPair.objects.get(user=receiver).RSAkey
+                message=receiver_keypair.decrypt(message.message).decode("utf-8")
+                message.encrypt=False
+                message.save()
+            else:
+                messages = Message.objects.filter(receiver=request.user.username)
+
+                return render(
+                        request,
+                        'decrypt_message_error.html',
+                        {'messages': messages,'form':MessageForm()}
+                    )
+
+        messages = Message.objects.filter(receiver=request.user.username)
+
+        return render(
+                request,
+                'receive_message.html',
+                {'messages': messages,'form':MessageForm()}
+            )
+
+
+
+
+
 
 
 def gohome(request):

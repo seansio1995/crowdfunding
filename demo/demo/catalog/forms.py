@@ -36,3 +36,4 @@ class unSuspendUser(forms.Form):
 class MessageForm(forms.Form):
     receiver = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'max_length': 255}))
     message = forms.CharField(widget=forms.Textarea)
+    encrypt = forms.BooleanField(required=False)

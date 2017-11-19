@@ -6,6 +6,10 @@
 
 <h2>Sender:{{message.sender}}</h2>
 <h2>Message: {{message.message}}</h2>
+
+<form method = "POST" action ="decrypt_message" class = "form-group">{% csrf_token %}
+  <input type="submit" value="Decrypt Message" />
+</form>
 <br/>
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
             <table>
