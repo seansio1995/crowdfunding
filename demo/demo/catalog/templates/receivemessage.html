@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h2><a href={% url 'gohome' %}>Go Back</a></h2>
+{% for message in messages reversed %}
+
+<h2>Sender:{{message.sender}}</h2>
+<h2>Message: {{message.message}}</h2>
+<br/>
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+            <table>
+            {{ form}}
+            </table>
+            <input type="submit" class = "submit" value="Send Message" />
+        </form>
+
+        <br />
+<h5><a href={% url 'deletemessage' pk=message.pk %}>Delete Message</a></h2>
+<h6>Next Message------------------------------------------------------</h2>
+{% endfor %}
+
+{% endblock %}
