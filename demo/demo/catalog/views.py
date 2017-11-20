@@ -325,16 +325,16 @@ def send_message(request):
     #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
     #### make a form for delete 
 #@csrf_protect
-def deletemessage(request, pk):
-   message = Message.objects.get(pk=pk)
+def deletemessage(request):
+   #message = Message.objects.get(pk=pk)
    if request.method == 'POST' and "delete-message" in request.POST:
         #form = DeleteMessage(request.POST, instance=message)
 
         #if form.is_valid(): # checks CSRF
         messagepk= request.POST.get("messagepk")
-        message = Message.objects.get(pk=messagepk)
+        message = Message.objects.get(id=messagepk)
         message.delete()
-        message.save()
+        #message.save()
         return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
    else:
