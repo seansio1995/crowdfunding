@@ -314,17 +314,30 @@ def send_message(request):
 
     #####
     
-#@csrf_protect
-def deletemessage(request, pk):
-    if request.method == 'POST':
-        message = Message.objects.get(pk=pk)
-        message.delete()
-        return render(request,'deletemessage.html')    
+#def deletemessage(request, pk):
+  #  if request.method == 'POST':
+  #      message = Message.objects.get(pk=pk)
+  #      message.delete()
+  #      return render(request,'deletemessage.html')    
     
     #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
     #### make a form for delete 
+#@csrf_protect
+def deletemessage(request, pk):
+   new_to_delete = get_object_or_404(New, pk=pk)
+   
+   if request.method == 'POST':
+        form = DeleteMessage(request.POST, instance=new_to_delete)
 
-    
+        if form.is_valid(): # checks CSRF
+            new_to_delete.delete()
+            return HttpResponseRedirect("/") # wherever to go after deleting
+
+    else:
+        form = DeleteNewForm(instance=new_to_delete)
+
+    template_vars = {'form': form}
+    return render(request, 'deletemessage.html', template_vars)
     
     
     
