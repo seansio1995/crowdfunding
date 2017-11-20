@@ -383,6 +383,30 @@ def receive_message(request):
             {'messages': messages,'form':MessageForm()}
         )
 
+#@csrf_protect
+def receivemessage(request):
+    if request.method=="POST":
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            receiver= (form.cleaned_data['receiver']).strip()
+            sender = request.user.username
+            message = Message.objects.create(
+                    message=message, sender=sender,receiver=receiver)
+            messages = Message.objects.filter(receiver=request.user.username)
+            return render(
+                    request,
+                    'receive_message.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
+
+    messages = Message.objects.filter(receiver=request.user.username)
+    return render(
+            request,
+            'receive_message.html',
+            {'messages': messages,'form':MessageForm()}
+        )
+
 
 def gohome(request):
     if request.user.profile.is_manager == True:
