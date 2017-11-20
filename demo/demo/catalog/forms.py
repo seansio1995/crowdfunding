@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .models import New
+from .models import Message
 
 
 class SignUpForm(UserCreationForm):
@@ -42,5 +42,5 @@ class MessageForm(forms.Form):
     
 class DeleteMessage(forms.ModelForm):
     class Meta:
-        model = New
+        model = Message
         fields = []
