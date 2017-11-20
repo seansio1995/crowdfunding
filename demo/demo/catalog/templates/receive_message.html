@@ -13,12 +13,7 @@
             </table>
             <input type="submit" class = "submit" value="Send Message" />
         </form>
-<form method = "POST" action ="." class = "form-group">{% csrf_token %}
-            <table>
-            {{ form}}
-            </table>
-            <input type="delete" class = "delete" value="Delete Message" />
-        </form>
+
         <br />
 <h5><a href={% url 'deletemessage' %}>Delete Message</a></h2>
 <h6>Next Message------------------------------------------------------</h2>
