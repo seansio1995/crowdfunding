@@ -3,6 +3,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from .models import New
+
+
 class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
@@ -36,3 +39,8 @@ class unSuspendUser(forms.Form):
 class MessageForm(forms.Form):
     receiver = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'max_length': 255}))
     message = forms.CharField(widget=forms.Textarea)
+    
+class DeleteMessage(forms.ModelForm):
+    class Meta:
+        model = New
+        fields = []
