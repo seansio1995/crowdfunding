@@ -334,7 +334,7 @@ def deletemessage(request, pk):
         messagepk= request.POST.get("messagepk")
         message = Message.objects.get(pk=messagepk)
         message.delete()
-            #message.save()
+        message.save()
         return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
    else:
