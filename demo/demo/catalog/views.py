@@ -1,13 +1,13 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm
+from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, DeleteMessage
 from django.contrib.auth.models import User,Group
 from .models import Report, Message
 from django.contrib.auth.decorators import login_required
 
 from .forms import DeleteMessage
-from .models import New
+from .models import Message
 
 
 def signup(request):
@@ -326,7 +326,7 @@ def send_message(request):
     #### make a form for delete 
 #@csrf_protect
 def deletemessage(request, pk):
-   new_to_delete = get_object_or_404(New, pk=pk)
+   new_to_delete = get_object_or_404(Message, pk=pk)
    
    if request.method == 'POST':
         form = DeleteMessage(request.POST, instance=new_to_delete)
