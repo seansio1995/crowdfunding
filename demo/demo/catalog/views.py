@@ -336,7 +336,7 @@ def deletemessage(request, pk):
             return HttpResponseRedirect("/") # wherever to go after deleting
 
    else:
-        form = DeleteNewForm(instance=new_to_delete)
+        form = DeleteMessage(instance=new_to_delete)
    
    template_vars = {'form': form}
    return render(request, 'deletemessage.html', template_vars)
