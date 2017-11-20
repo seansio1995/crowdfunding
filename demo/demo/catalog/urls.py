@@ -33,4 +33,5 @@ urlpatterns = [
     url(r'^sendmessage/$',views.send_message,name="sendmessage"),
     url(r'^receivemessage/$',views.receive_message,name="receivemessage"),
     url(r'^gohome/$',views.gohome,name="gohome"),
+    #url(r'^decryptmessage/$',views.decrypt_message,name="decryptmessage"),
 ]

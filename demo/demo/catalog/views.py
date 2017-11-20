@@ -3,13 +3,13 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm
 from django.contrib.auth.models import User,Group
-from .models import Report, Message
+from .models import Report, Message,KeyPair
 from django.contrib.auth.decorators import login_required
 from Crypto import Random
 from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
 import Crypto
-
-
+from ast import literal_eval
 
 def signup(request):
     if request.method == 'POST':
@@ -23,8 +23,11 @@ def signup(request):
             #user_type = dict(form.fields['user_type'].choices)[user_type]
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
+            random_generator = Random.new().read
+            RSAkey=RSA.generate(1024,random_generator).exportKey()
+            pubkey=RSA.importKey(RSAkey).publickey().exportKey()
             keypair = KeyPair.objects.create(
-                user=user,RSAkey=RSA.generate(2048,Random.new().read)
+                user=user,RSAkey=RSAkey,pubkey=pubkey
             )
 
             if user_type=="company":
@@ -312,9 +315,12 @@ def send_message(request):
             sender = request.user.username
             encrypt=form.cleaned_data['encrypt']
             if encrypt:
-                receiver_keypair=KeyPair.objects.get(user=receiver).RSAkey
-                receiver_pubkey=receiver_keypair.publickey()
-                message=receiver_pubkey.encrypt(message,32)
+                user = User.objects.get(username=receiver)
+                #receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
+                src_data=message
+                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                message=str(enc_data)
             message = Message.objects.create(
                     message=message, sender=sender,receiver=receiver,encrypt=encrypt)
             return render(request,"send_message_success.html")
@@ -329,13 +335,20 @@ def send_message(request):
 
 #@csrf_protect
 def receive_message(request):
-    if request.method=="POST":
+    if request.method=="POST" and "send-message" in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.cleaned_data['message']
             receiver= (form.cleaned_data['receiver']).strip()
             encrypt=form.cleaned_data['encrypt']
             sender = request.user.username
+            encrypt=form.cleaned_data['encrypt']
+            if encrypt:
+                user = User.objects.get(username=receiver)
+                src_data=message
+                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                message=str(enc_data)
             message = Message.objects.create(
                     message=message, sender=sender,receiver=receiver,encrypt=encrypt)
             messages = Message.objects.filter(receiver=request.user.username)
@@ -345,32 +358,30 @@ def receive_message(request):
                     'receive_message.html',
                     {'messages': messages,'form':MessageForm()}
                 )
-
-    messages = Message.objects.filter(receiver=request.user.username)
-    return render(
-            request,
-            'receive_message.html',
-            {'messages': messages,'form':MessageForm()}
-        )
-
-def decrypt_message(request):
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = Message.objects.get(id=form.cleaned_data['message'])
-            if encrypt:
-                receiver_keypair=KeyPair.objects.get(user=receiver).RSAkey
-                message=receiver_keypair.decrypt(message.message).decode("utf-8")
-                message.encrypt=False
-                message.save()
-            else:
-                messages = Message.objects.filter(receiver=request.user.username)
-
-                return render(
-                        request,
-                        'decrypt_message_error.html',
-                        {'messages': messages,'form':MessageForm()}
-                    )
+        else:
+            print("NOT VALID")
+    elif request.method=="POST" and "decrypt-message" in request.POST:
+        print(request.POST.get('message_id'))
+        message_id=request.POST.get('message_id')
+        # form = MessageForm(request.POST)
+        # if form.is_valid():
+        #     print(form.cleaned_data['message'])
+        message = Message.objects.get(id=message_id)
+        if message.encrypt:
+            print("find message!")
+            user = User.objects.get(username=request.user.username)
+            receiver_keypair=KeyPair.objects.get(user=user).RSAkey
+            privkey = RSA.importKey(receiver_keypair)
+            message.message=privkey.decrypt(eval(message.message)).decode()
+            message.encrypt=False
+            message.save()
+        else:
+            messages = Message.objects.filter(receiver=request.user.username)
+            return render(
+                    request,
+                    'decrypt_message_error.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
 
         messages = Message.objects.filter(receiver=request.user.username)
 
@@ -380,9 +391,12 @@ def decrypt_message(request):
                 {'messages': messages,'form':MessageForm()}
             )
 
-
-
-
+    messages = Message.objects.filter(receiver=request.user.username)
+    return render(
+            request,
+            'receive_message.html',
+            {'messages': messages,'form':MessageForm()}
+        )
 
 
 

@@ -73,8 +73,11 @@ class Message(models.Model):
 
     message = models.CharField(max_length= 5000, help_text='message',default="")
 
+    encrypt=models.BooleanField(default=False)
+
 
 
 class KeyPair(models.Model):
     user = models.OneToOneField(User)
     RSAkey = models.CharField(max_length=15000)
+    pubkey=models.CharField(max_length=15000)
