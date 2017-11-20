@@ -333,7 +333,7 @@ def deletemessage(request, pk):
 
         if form.is_valid(): # checks CSRF
             new_to_delete.delete()
-            return HttpResponseRedirect("/") # wherever to go after deleting
+            return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
    else:
         form = DeleteMessage(instance=new_to_delete)
