@@ -6,6 +6,8 @@ from django.contrib.auth.models import User,Group
 from .models import Report, Message
 from django.contrib.auth.decorators import login_required
 
+from .forms import DeleteMessage
+from .models import New
 
 
 def signup(request):
