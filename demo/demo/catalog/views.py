@@ -338,8 +338,8 @@ def deletemessage(request, pk):
    else:
         form = DeleteMessage(instance=message)
    
-   template_vars = {'form': form}
-   return render(request, 'deletemessage.html', template_vars)
+        template_vars = {'form': form}
+        return render(request, 'deletemessage.html', template_vars)
     
     
     
