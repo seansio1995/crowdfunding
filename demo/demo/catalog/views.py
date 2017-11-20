@@ -18,9 +18,9 @@ def signup(request):
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            #user_type=form.cleaned_data["user_type"]
-            #reason = form.cleaned_data['reason']
-            #user_type = dict(form.fields['user_type'].choices)[user_type]
+            user_type=form.cleaned_data["user_type"]
+            reason = form.cleaned_data['reason']
+            user_type = dict(form.fields['user_type'].choices)[user_type]
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
             random_generator = Random.new().read
@@ -160,9 +160,14 @@ def viewallreport(request):
 
 @login_required(login_url = 'login')
 def viewgroup(request,pk):
-    group = Group.objects.get(pk=pk)
-    users = group.user_set.all()
-    return render(request,'group_members.html',{'users':users})
+    if request.user.profile.is_manager == True:
+        group = Group.objects.get(pk=pk)
+        users = group.user_set.all()
+        return render(request, 'group_membersM.html', {'users': users})
+    else:
+        group = Group.objects.get(pk=pk)
+        users = group.user_set.all()
+        return render(request,'group_members.html',{'users':users})
 
 
 
@@ -322,7 +327,7 @@ def send_message(request):
             encrypt=form.cleaned_data['encrypt']
             if encrypt:
                 user = User.objects.get(username=receiver)
-                #receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
+                receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
                 src_data=message
                 receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
                 enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
@@ -369,9 +374,9 @@ def receive_message(request):
     elif request.method=="POST" and "decrypt-message" in request.POST:
         print(request.POST.get('message_id'))
         message_id=request.POST.get('message_id')
-        # form = MessageForm(request.POST)
-        # if form.is_valid():
-        #     print(form.cleaned_data['message'])
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data['message'])
         message = Message.objects.get(id=message_id)
         if message.encrypt:
             print("find message!")

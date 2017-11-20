@@ -34,5 +34,4 @@ urlpatterns = [
     url(r'^receivemessage/$',views.receive_message,name="receivemessage"),
     url(r'^gohome/$',views.gohome,name="gohome"),
     url(r'^mem/(?P<pk>[0-9]+)/$',views.viewgroup, name = 'members'),
-    url(r'^decryptmessage/$',views.decrypt_message,name="decryptmessage"),
 ]
