@@ -325,8 +325,8 @@ def send_message(request):
     #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
     #### make a form for delete 
 #@csrf_protect
-def deletemessage(request, deletemessage):
-   message = Message.objects.get(deletemessage=deletemessage)
+def deletemessage(request, pk):
+   message = Message.objects.get(pk=pk)
    if request.method == 'POST':
         form = DeleteMessage(request.POST, instance=message)
 
