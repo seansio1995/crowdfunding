@@ -32,6 +32,6 @@ urlpatterns = [
     url(r'^UnSuspend/$', views.unsuspend_user, name='unsuspend'),
     url(r'^sendmessage/$',views.send_message,name="sendmessage"),
     url(r'^receivemessage/$',views.receive_message,name="receivemessage"),
-    url(r'^deletemessage/$', views.deletemessage, name='deletemessage'),
+    url(r'^(?P<pk>[0-9]+)/$', views.deletemessage, name = 'deletemessage'),
     url(r'^gohome/$',views.gohome,name="gohome"),
 ]
