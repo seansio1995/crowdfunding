@@ -401,8 +401,17 @@ def receivemessage(request):
             'receivemessage.html',
             {'messages': messages,'form':MessageForm()}
         )
+    elif request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
 
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
+    
 def gohome(request):
     if request.user.profile.is_manager == True:
         return render(request,"manager_home.html")
