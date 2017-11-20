@@ -408,7 +408,7 @@ def receivemessage(request):
         messagepk= request.POST.get("messagepk")
         message = Message.objects.get(id=messagepk)
         message.delete()
-        message.save()
+        #message.save()
         return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
     
