@@ -15,7 +15,10 @@
         </form>
 
         <br />
-<h5><a href={% url 'deletemessage' pk=message.pk %}>Delete Message</a></h2>
+
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+        <input type="submit" class = "submit" value="Delete Message" name = "delete-message" />
+        </form>
 <h6>Next Message------------------------------------------------------</h2>
 {% endfor %}
 
