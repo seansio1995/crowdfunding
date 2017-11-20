@@ -331,6 +331,8 @@ def deletemessage(request, pk):
         #form = DeleteMessage(request.POST, instance=message)
 
         #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(pk=messagepk)
         message.delete()
             #message.save()
         return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
