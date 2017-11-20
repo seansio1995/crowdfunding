@@ -333,7 +333,7 @@ def deletemessage(request, pk):
             new_to_delete.delete()
             return HttpResponseRedirect("/") # wherever to go after deleting
 
-    else:
+   else:
         form = DeleteNewForm(instance=new_to_delete)
 
     template_vars = {'form': form}
