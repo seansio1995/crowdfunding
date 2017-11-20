@@ -396,14 +396,14 @@ def receivemessage(request):
             messages = Message.objects.filter(receiver=request.user.username)
             return render(
                     request,
-                    'receive_message.html',
+                    'receivemessage.html',
                     {'messages': messages,'form':MessageForm()}
                 )
 
     messages = Message.objects.filter(receiver=request.user.username)
     return render(
             request,
-            'receive_message.html',
+            'receivemessage.html',
             {'messages': messages,'form':MessageForm()}
         )
 
