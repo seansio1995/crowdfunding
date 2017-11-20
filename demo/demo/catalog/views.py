@@ -401,7 +401,7 @@ def receivemessage(request):
             'receivemessage.html',
             {'messages': messages,'form':MessageForm()}
         )
-    elif request.method == 'POST' and "delete-message" in request.POST:
+    if request.method == 'POST' and "delete-message" in request.POST:
         #form = DeleteMessage(request.POST, instance=message)
 
         #if form.is_valid(): # checks CSRF
