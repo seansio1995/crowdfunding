@@ -403,7 +403,7 @@ def receivemessage(request):
         )
     if request.method == 'POST' and "delete-message" in request.POST:
         #form = DeleteMessage(request.POST, instance=message)
-
+        print("delete-message" in request.POST)
         #if form.is_valid(): # checks CSRF
         messagepk= request.POST.get("messagepk")
         message = Message.objects.get(id=messagepk)
