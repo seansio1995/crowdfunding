@@ -81,3 +81,4 @@ class KeyPair(models.Model):
     user = models.OneToOneField(User)
     RSAkey = models.CharField(max_length=15000)
     pubkey=models.CharField(max_length=15000)
+

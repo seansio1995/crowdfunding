@@ -1,6 +1,7 @@
  {% extends "base_generic.html" %}
 
 {% block content %}
+    {{request.user.username}}
              <ul class="sidebar-nav">
      <li><a href={% url 'logout' %}> Log Out</a></li>
 </ul>
