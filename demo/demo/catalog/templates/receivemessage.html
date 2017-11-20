@@ -17,7 +17,7 @@
         <br />
 
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
-        <input type="hidden" class = "submit" value="{{message.pk}}" name = "messagepk" />
+        <input type="hidden" class = "submit" value="{{message.id}}" name = "messagepk" />
         <input type="submit" class = "submit" value="Delete Message" name = "delete-message" />
         </form>
 <h6>Next Message------------------------------------------------------</h2>
