@@ -148,6 +148,12 @@ def viewallreport(request):
     "report_list":report_list
 })
 
+@login_required(login_url = 'login')
+def viewgroup(request,pk):
+    group = Group.objects.get(pk=pk)
+    users = group.user_set.all()
+    return render(request,'group_members.html',{'users':users})
+
 
 
 @login_required(login_url = 'login')
