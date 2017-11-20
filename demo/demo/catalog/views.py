@@ -325,49 +325,33 @@ def send_message(request):
     #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
     #### make a form for delete 
 #@csrf_protect
-#def deletemessage(request, pk):
- #  message = Message.objects.get(pk=pk)
-  # if request.method == 'POST':
-   #     form = DeleteMessage(request.POST, instance=message)
+def deletemessage(request, pk):
+   message = Message.objects.get(pk=pk)
+   if request.method == 'POST':
+        form = DeleteMessage(request.POST, instance=message)
 
-    #    if form.is_valid(): # checks CSRF
-     #       message.delete()
-      #      message.save()
-       #     return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        if form.is_valid(): # checks CSRF
+            message.delete()
+            message.save()
+            return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
-#   else:
- #       form = DeleteMessage(instance=message)
+   else:
+        form = DeleteMessage(instance=message)
    
-  # template_vars = {'form': form}
-   #return render(request, 'deletemessage.html', template_vars)
+   template_vars = {'form': form}
+   return render(request, 'deletemessage.html', template_vars)
     
     
     
-def deletemessage(request, pk, template_name='deletemessage.html'):
-    message = get_object_or_404(Message, pk=pk)    
-    if request.method=='POST':
-        message.delete()
-        return redirect('deletemessage.html')
-    return render(request, template_name, {'form':form})    
+#def deletemessage(request, pk, template_name='deletemessage.html'):
+ #   message = get_object_or_404(Message, pk=pk)    
+  #  if request.method=='POST':
+   #     message.delete()
+    #    return redirect('deletemessage.html')
+    #return render(request, template_name, {'form':form})    
    
 ###
 
-   #new_to_delete = get_object_or_404(Message, pk=pk)
-   #if request.method == 'POST':
-    #    form = DeleteMessage(request.POST, instance=new_to_delete)
-
-#        if form.is_valid(): # checks CSRF
- #           new_to_delete.delete()
-  #          return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
-
-   #else:
-    #    form = DeleteMessage(instance=new_to_delete)
-   
-   #template_vars = {'form': form}
-   #return render(request, 'deletemessage.html', template_vars)
-   
-    
-    ###########
 #@csrf_protect
 def receive_message(request):
     if request.method=="POST":
