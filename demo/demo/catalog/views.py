@@ -322,7 +322,8 @@ def deletemessage(request):
             message.delete()
         return render(request,'deletemessage.html')    
     
-    ####
+    #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
+    #### make a form for delete 
 
 #@csrf_protect
 def receive_message(request):
