@@ -380,7 +380,7 @@ def receive_message(request):
 
 #@csrf_protect
 def receivemessage(request):
-    if request.method=="POST":
+    if request.method=="POST" and "delete-message" not in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.cleaned_data['message']
