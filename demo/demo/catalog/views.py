@@ -327,13 +327,13 @@ def send_message(request):
 #@csrf_protect
 def deletemessage(request, pk):
    message = Message.objects.get(pk=pk)
-   if request.method == 'POST':
-        form = DeleteMessage(request.POST, instance=message)
+   if request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
 
-        if form.is_valid(): # checks CSRF
-            message.delete()
+        #if form.is_valid(): # checks CSRF
+        message.delete()
             #message.save()
-            return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
    else:
         form = DeleteMessage(instance=message)
