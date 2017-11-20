@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime
+from Crypto.PublicKey import RSA
 
 
 # Create your models here.
@@ -71,3 +72,12 @@ class Message(models.Model):
     sender = models.CharField(max_length=30, help_text="Sender",default="")
 
     message = models.CharField(max_length= 5000, help_text='message',default="")
+
+    encrypt=models.BooleanField(default=False)
+
+
+
+class KeyPair(models.Model):
+    user = models.OneToOneField(User)
+    RSAkey = models.CharField(max_length=15000)
+    pubkey=models.CharField(max_length=15000)

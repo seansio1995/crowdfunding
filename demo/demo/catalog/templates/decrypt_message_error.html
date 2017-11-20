@@ -2,22 +2,23 @@
 
 {% block content %}
 <h2><a href={% url 'gohome' %}>Go Back</a></h2>
+<script>
+  alert("Error! The Message is Not Encrypted");
+</script>
 {% for message in messages reversed %}
 
 <h2>Sender:{{message.sender}}</h2>
-<h2>ID:{{message.id}}</h2>
 <h2>Message: {{message.message}}</h2>
 
-<form method = "POST" action ="." class = "form-group">{% csrf_token %}
-  <input type="hidden" name="message_id" value="{{message.id}}" />
-  <input type="submit" value="Decrypt Message" id="message.id" name="decrypt-message" />
+<form method = "POST" action ="/catalog/decryptmessage/" class = "form-group">{% csrf_token %}
+  <input type="submit" value="Decrypt Message" />
 </form>
 <br/>
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
             <table>
             {{ form}}
             </table>
-            <input type="submit" class = "submit" value="Send Message" name="send-message"/>
+            <input type="submit" class = "submit" value="Send Message" />
         </form>
         <br />
 <h6>Next Message------------------------------------------------------</h2>
