@@ -3,9 +3,9 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
-from django.utils import timezone
-import datetime
-from Crypto.PublicKey import RSA
+# from django.utils import timezone
+# import datetime
+# from Crypto.PublicKey import RSA
 
 
 # Create your models here.
@@ -81,4 +81,12 @@ class KeyPair(models.Model):
     user = models.OneToOneField(User)
     RSAkey = models.CharField(max_length=15000)
     pubkey=models.CharField(max_length=15000)
+
+
+class project(models.Model):
+    upvotes = models.IntegerField(default = 0, help_text='upvotes')
+
+    project_name = models.CharField(max_length= 100, help_text='project name')
+
+    project_description = models.CharField(max_length= 1000, help_text='project description')
 
