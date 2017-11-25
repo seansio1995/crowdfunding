@@ -5,6 +5,8 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from tagging.registry import register
 
+
+
 from django.utils import timezone
 import datetime
 from Crypto.PublicKey import RSA
@@ -86,8 +88,6 @@ class KeyPair(models.Model):
 
 
 
-
-
 class project(models.Model):
     upvotes = models.IntegerField(default = 0, help_text='upvotes')
 
@@ -96,6 +96,7 @@ class project(models.Model):
     project_description = models.CharField(max_length= 1000, help_text='project description')
 
     project_company = models.CharField(max_length= 100, help_text='project name',default = '')
+
 
 register(project)
 

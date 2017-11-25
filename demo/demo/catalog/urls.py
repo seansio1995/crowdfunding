@@ -34,4 +34,9 @@ urlpatterns = [
     url(r'^receivemessage/$',views.receive_message,name="receivemessage"),
     url(r'^gohome/$',views.gohome,name="gohome"),
     url(r'^mem/(?P<pk>[0-9]+)/$',views.viewgroup, name = 'members'),
+    url(r'^projects/$',views.project_list, name = 'projects'),
+    url(r'^allprojects/$', views.project_list_all, name='allprojects'),
+    url(r'^upvote/(?P<pk>[0-9]+)/$', views.upvote_project, name='upvote'),
+    url(r'^addproject/(?P<pk>[0-9]+)/$', views.add_project, name='addproject'),
+    url(r'^createP/$', views.create_project, name='createproject'),
 ]

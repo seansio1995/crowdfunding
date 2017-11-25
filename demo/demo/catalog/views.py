@@ -1,16 +1,16 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm
+from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm
 from django.contrib.auth.models import User,Group
-from .models import Report, Message,KeyPair
+from .models import Report, Message,KeyPair, project
 from django.contrib.auth.decorators import login_required
 from Crypto import Random
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 import Crypto
 from ast import literal_eval
-
+from tagging.models import Tag, TaggedItem
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -419,14 +419,47 @@ def gohome(request):
     else:
         return render(request,"investor_home.html")
 
-# def project_list(request):
-#     if request.user.profile.is_manager == True:
-#         return render(request,'projectlistM.html')
-#     else:
-#         return render(request,'projectlist.html')
+def project_list(request):
+    tags = Tag.objects.get(name = request.user.username)
+    Projects = TaggedItem.objects.get_by_model(project,tags)
+    if len(Projects) == 0:
+        has_project = False
+    else:
+        has_project = True
+    return render(request, 'project_list.html', {'projects': Projects, 'has_project': has_project})
 
-# def add_project(request):
-#     if request.user.profile.is_manager == True:
-#         return render(request,'projectlistM.html')
-#     else:
-#         return render(request,'projectlist.html')
+
+def add_project(request,pk):
+    Project = project.objects.get(pk=pk)
+    Tag.objects.add_tag(Project,request.user.username)
+    return redirect('projects')
+
+
+def upvote_project(request,pk):
+    Project = project.objects.get(pk=pk)
+    Project.upvotes = Project.upvotes + 1
+    Project.save()
+    return redirect('gohome')
+
+def project_list_all(request):
+    projects = project.objects.all()
+    if len(projects) == 0:
+        has_project = False
+    else:
+        has_project = True
+    return render(request, 'all_projects.html', {'projects': projects, 'has_project': has_project})
+
+def create_project(request):
+    if request.method == 'POST':
+        project_name = request.POST.get('projectname')
+        company_name = request.POST.get('companyname')
+        description = request.POST.get('description')
+        project.objects.get_or_create(project_name = project_name)
+        p = project.objects.get(project_name= project_name)
+        p.company_name = company_name
+        p.description = description
+        p.save()
+        return redirect('gohome')
+    else:
+        form1 = ProjectForm
+        return render(request, 'createproject.html', {'form1': form1})

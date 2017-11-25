@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+
+ {% block content %}
+          <ul class="sidebar-nav">
+     <li><a href={% url 'logout' %}> Log Out</a></li>
+              <li><a href={% url 'gohome' %}>Home</a></li>
+</ul>
+    <title>Your Projects</title>
+     <h1>Your Projects</h1>
+     {% if has_project %}
+       {% for project in projects%}
+
+           <h2>
+               {{project.project_name}}
+            {{project.upvotes}}
+           </h2>
+
+       {% endfor %}
+     {% else %}
+               <p>You have not added any projects</p>
+     {% endif %}
+{% endblock %}
