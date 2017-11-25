@@ -70,6 +70,8 @@ class Report(models.Model):
     #have to be able to mark reports as private
     is_private = models.BooleanField(default = False)
 
+    files = models.FileField(null = True,blank = True, upload_to= 'documents/%Y/%m/%d/')
+
 class Message(models.Model):
     receiver = models.CharField(max_length= 30, help_text="Receiver",default="")
 
