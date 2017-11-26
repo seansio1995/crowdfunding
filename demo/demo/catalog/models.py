@@ -5,11 +5,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from tagging.registry import register
 
-
-
 from django.utils import timezone
-import datetime
-from Crypto.PublicKey import RSA
 
 
 # Create your models here.
@@ -43,8 +39,6 @@ def save_user_profile(sender, instance, **kwargs):
 class Report(models.Model):
     report_no = models.AutoField(primary_key=True)
 
-    #init_date = models.DateTimeField(default=timezone.now)
-
     current_projects = models.CharField(default= "No current Projects",max_length= 1000, help_text="Projects")
 
     company = models.CharField(max_length=30, help_text="Company name")
@@ -62,6 +56,8 @@ class Report(models.Model):
     industry = models.CharField(max_length=30, help_text="Company industry")
 
     description=models.CharField(default="No description yet",max_length=3000,help_text="Project description")
+
+    timestamp = models.DateTimeField(default = timezone.now)
 
     #created_by = models.ForeignKey(User)
 
