@@ -420,12 +420,14 @@ def gohome(request):
         return render(request,"investor_home.html")
 
 def project_list(request):
-    tags = Tag.objects.get(name = request.user.username)
-    Projects = TaggedItem.objects.get_by_model(project,tags)
-    if len(Projects) == 0:
-        has_project = False
-    else:
+    Tags = Tag.objects.all()
+    if request.user.username in Tags:
         has_project = True
+        tags = Tag.objects.get(name = request.user.username)
+        Projects = TaggedItem.objects.get_by_model(project,tags)
+    else:
+        has_project = False
+        Projects = []
     return render(request, 'project_list.html', {'projects': Projects, 'has_project': has_project})
 
 
