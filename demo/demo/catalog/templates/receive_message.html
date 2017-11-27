@@ -23,7 +23,9 @@
             </table>
             <input type="submit" class = "submit" value="Send Message" name="send-message"/>
         </form>
+
         <br />
+<h5><a href={% url 'deletemessage' pk=message.pk %}>Delete Message</a></h2>
 <h6>Next Message------------------------------------------------------</h2>
 {% endfor %}
 

@@ -1,18 +1,30 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm
+
+from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage
+
 from django.contrib.auth.models import User,Group
 from .models import Report, Message,KeyPair, project
 from django.contrib.auth.decorators import login_required
+
+
+from .forms import DeleteMessage
+from .models import Message
+
+from django.http import HttpResponseRedirect, HttpResponse
+
+
 from Crypto import Random
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5
 import Crypto
 from ast import literal_eval
 from tagging.models import Tag, TaggedItem
+
 import operator
 from .forms import SearchForm
+
 
 def signup(request):
     if request.method == 'POST':
@@ -65,6 +77,7 @@ def report_list(request):
 
 
 def index(request):
+    #return HttpResponse("Hello, world.  You're at the catalog index.")
     return render(
         request,
         'index.html',
@@ -150,13 +163,18 @@ def viewreport(request,pk):
     "report":report
 })
 
-
-
 @login_required(login_url = 'login')
 def viewallreport(request):
-    #Not implemented yet
+    search_key = request.POST.get('myList') 
+    #print(search_key)
+    search_val = request.POST.get('search_val') 
     #report = get_object_or_404(Report)
-    report_list=Report.objects.all()
+    if search_val is None:
+       report_list=Report.objects.all()
+    else:
+       options = {}
+       options[search_key] = search_val 
+       report_list=Report.objects.filter(**options)
     #report=Report.objects.all()[0]
     return render(request,'view_all_report.html',{
     "report_list":report_list
@@ -349,8 +367,45 @@ def send_message(request):
                 'send_message.html',
                 {'form': MessageForm()})
 
+    #####
+    
+#def deletemessage(request, pk):
+  #  if request.method == 'POST':
+  #      message = Message.objects.get(pk=pk)
+  #      message.delete()
+  #      return render(request,'deletemessage.html')    
+    
+    #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
+    #### make a form for delete 
+#@csrf_protect
+def deletemessage(request):
+   #message = Message.objects.get(pk=pk)
+   if request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
 
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
+   else:
+        form = DeleteMessage(instance=message)
+   
+        template_vars = {'form': form}
+        return render(request, 'deletemessage.html', template_vars)
+    
+    
+    
+#def deletemessage(request, pk, template_name='deletemessage.html'):
+ #   message = get_object_or_404(Message, pk=pk)    
+  #  if request.method=='POST':
+   #     message.delete()
+    #    return redirect('deletemessage.html')
+    #return render(request, template_name, {'form':form})    
+   
+###
 
 #@csrf_protect
 def receive_message(request):
@@ -418,7 +473,44 @@ def receive_message(request):
             {'messages': messages,'form':MessageForm()}
         )
 
+#@csrf_protect
+def receivemessage(request):
+    print("****h******")
+    print(request.POST)
+    if request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-message" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'deletemessage.html'
+              )
+    if request.method=="POST" and "delete-message" not in request.POST:
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            receiver= (form.cleaned_data['receiver']).strip()
+            sender = request.user.username
+            message = Message.objects.create(
+                    message=message, sender=sender,receiver=receiver)
+            messages = Message.objects.filter(receiver=request.user.username)
+            return render(
+                    request,
+                    'receivemessage.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
 
+    messages = Message.objects.filter(receiver=request.user.username)
+    return render(
+            request,
+            'receivemessage.html',
+            {'messages': messages,'form':MessageForm()}
+        )
 
 def gohome(request):
     if request.user.profile.is_manager == True:

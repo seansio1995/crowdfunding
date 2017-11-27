@@ -5,6 +5,9 @@ from django.contrib import messages
 from .models import Report
 from simple_search import search_form_factory
 
+from .models import Message
+
+
 class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
@@ -40,10 +43,18 @@ class MessageForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
     encrypt = forms.BooleanField(required=False)
 
+    
+class DeleteMessage(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = []
+
+
 class ProjectForm(forms.Form):
     companyname = forms.CharField(max_length=30, required=True)
     projectname = forms.CharField(max_length=30, required=True)
     description = forms.CharField(max_length=1000, required=True)
+
 
 SearchForm = search_form_factory(Report.objects.all(),
                                  ['^company',
