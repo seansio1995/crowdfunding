@@ -14,9 +14,39 @@
 Company Name: {{report.company}}
 </h2>
 
-<h2>
+<h3>
+Phone Number: {{report.phone}}
+</h3>
+
+<h3>
+Company Location: {{report.location}}
+</h3>
+
+<h3>
+Country: {{report.country}}
+</h3>
+
+<h3>
+Sector: {{report.sector}}
+</h3>
+
+<h3>
+Industry: {{report.industry}}
+</h3>
+
+<h3>
+    Funding goal: {{ report.funding_goal }}
+</h3>
+
+<p>
+  Project Description:
+  {{report.description}}
+</p>
+
+
+<h3>
   <a href={% url 'viewreport' report.pk %}>Show More Information</a>
-</h2>
+</h3>
 
 {% endfor %}
 

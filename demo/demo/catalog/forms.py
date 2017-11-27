@@ -46,4 +46,10 @@ class ProjectForm(forms.Form):
     description = forms.CharField(max_length=1000, required=True)
 
 SearchForm = search_form_factory(Report.objects.all(),
-                                 ['^company'])
+                                 ['^company',
+                                  'sector',
+                                  'current_projects',
+                                  'location',
+                                  'country',
+                                  'industry',
+                                  'description'])
