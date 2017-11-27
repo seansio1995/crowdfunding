@@ -9,46 +9,75 @@
         <button type="submit">Search</button>
     </form>
 
-{% for report in results %}
-<h2>
-Company Name: {{report.company}}
-</h2>
+<br>
 
-<h3>
-Phone Number: {{report.phone}}
-</h3>
-
-<h3>
-Company Location: {{report.location}}
-</h3>
-
-<h3>
-Country: {{report.country}}
-</h3>
-
-<h3>
-Sector: {{report.sector}}
-</h3>
-
-<h3>
-Industry: {{report.industry}}
-</h3>
-
-<h3>
-    Funding goal: {{ report.funding_goal }}
-</h3>
-
-<p>
-  Project Description:
-  {{report.description}}
-</p>
+<table>
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Country</th>
+            <th>Sector</th>
+            <th>Industry</th>
+            <th>Phone</th>
+            <th>Funding goal</th>
+        </tr>
+    </thead>
+    {% for report in results %}
+    <tbody>
+        <tr>
+            <td>{{ report.company }}</td>
+            <td>{{ report.location }}</td>
+            <td>{{ report.country }}</td>
+            <td>{{ report.sector }}</td>
+            <td>{{ report.industry }}</td>
+            <td>{{ report.phone }}</td>
+            <td>{{ report.funding_goal }}</td>
+        </tr>
+    </tbody>
+    {% endfor %}
 
 
-<h3>
-  <a href={% url 'viewreport' report.pk %}>Show More Information</a>
-</h3>
+</table>
 
-{% endfor %}
+{#<h2>#}
+{#Company Name: {{report.company}}#}
+{#</h2>#}
+{##}
+{#<h3>#}
+{#Phone Number: {{report.phone}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Company Location: {{report.location}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Country: {{report.country}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Sector: {{report.sector}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Industry: {{report.industry}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#    Funding goal: {{ report.funding_goal }}#}
+{#</h3>#}
+{##}
+{#<p>#}
+{#  Project Description:#}
+{#  {{report.description}}#}
+{#</p>#}
+{##}
+{##}
+{#<p>#}
+{#  <a href={% url 'viewreport' report.pk %}>Show More Information</a>#}
+{#</p>#}
+
 
 {% endblock %}
 
