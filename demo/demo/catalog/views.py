@@ -406,6 +406,47 @@ def send_message(request):
 
 #@csrf_protect
 def receive_message(request):
+    print(request.POST)
+    if request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-message" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'deletemessage.html'
+              )
+    if request.method=="POST" and "delete-message" not in request.POST:
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            receiver= (form.cleaned_data['receiver']).strip()
+            sender = request.user.username
+            message = Message.objects.create(
+                    message=message, sender=sender,receiver=receiver)
+            messages = Message.objects.filter(receiver=request.user.username)
+            return render(
+                    request,
+                    'receivemessage.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
+
+    messages = Message.objects.filter(receiver=request.user.username)
+    return render(
+            request,
+            'receivemessage.html',
+            {'messages': messages,'form':MessageForm()}
+        )
+    
+    
+    
+    
+    
+    
     if request.method=="POST" and "send-message" in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -484,7 +525,6 @@ def receive_message(request):
 
 #@csrf_protect
 def receivemessage(request):
-    print("****h******")
     print(request.POST)
     if request.method == 'POST' and "delete-message" in request.POST:
         #form = DeleteMessage(request.POST, instance=message)
