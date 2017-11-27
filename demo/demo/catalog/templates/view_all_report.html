@@ -44,11 +44,11 @@ Industry: {{report.industry}}
   <a href={% url 'viewreport' report.pk %}>Show More Information</a>
 </h2>
 
+
+<form action="{% url 'delete_report' report.pk %}" method="POST">
+  <button type="submit">Delete Report</button>
+</form>
+
 <h2><b>-------------------------------------------------------------------</b></h2>
 {% endfor %}
 {% endblock %}
-
-
-
-
-

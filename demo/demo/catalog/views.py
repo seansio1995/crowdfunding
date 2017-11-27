@@ -127,6 +127,17 @@ def edit_report(request, pk):
     r = Report.objects.get(pk=pk)
     return render(request, 'edit_report.html', {'report':r})
 
+#@csrf_protect
+@login_required(login_url = 'login')
+def delete_report(request):
+    if request.method=="POST" and "delete-report" in request.POST:
+        pk=request.POST.get("reportpk")
+        r = Report.objects.get(pk=pk)
+        r.delete()
+        report_list=Report.objects.all()
+        return render(request, 'view_all_report.html', {'report_list':report_list})
+
+
 @login_required(login_url='login')
 def finish_edit(request, pk):
     r = Report.objects.get(pk=pk)
