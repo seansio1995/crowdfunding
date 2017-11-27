@@ -6,8 +6,12 @@
 
 <h2>Sender:{{message.sender}}</h2>
 <h2>ID:{{message.id}}</h2>
+{% if message.encrypt %}
+<h2>Message: {{message.content}}</h2>
+{% endif %}
+{% if message.encrypt is not True %}
 <h2>Message: {{message.message}}</h2>
-
+{% endif %}
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
   <input type="hidden" name="message_id" value="{{message.id}}" />
   <input type="submit" value="Decrypt Message" id="message.id" name="decrypt-message" />
