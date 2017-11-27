@@ -33,9 +33,6 @@ def signup(request):
             form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user_type=form.cleaned_data["user_type"]
-            reason = form.cleaned_data['reason']
-            user_type = dict(form.fields['user_type'].choices)[user_type]
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
             random_generator = Random.new().read
@@ -394,24 +391,7 @@ def send_message(request):
 
     #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
     #### make a form for delete
-#@csrf_protect
-def deletemessage(request):
-   #message = Message.objects.get(pk=pk)
-   if request.method == 'POST' and "delete-message" in request.POST:
-        #form = DeleteMessage(request.POST, instance=message)
 
-        #if form.is_valid(): # checks CSRF
-        messagepk= request.POST.get("messagepk")
-        message = Message.objects.get(id=messagepk)
-        message.delete()
-        #message.save()
-        return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
-
-   else:
-        form = DeleteMessage(instance=message)
-
-        template_vars = {'form': form}
-        return render(request, 'deletemessage.html', template_vars)
 
 
 
@@ -482,7 +462,19 @@ def receive_message(request):
                 'receive_message.html',
                 {'messages': messages,'form':MessageForm()}
             )
-
+    elif request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-message" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'deletemessage.html'
+              )
     messages = Message.objects.filter(receiver=request.user.username)
     return render(
             request,
