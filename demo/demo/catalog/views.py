@@ -11,6 +11,9 @@ from Crypto.Cipher import PKCS1_v1_5
 import Crypto
 from ast import literal_eval
 from tagging.models import Tag, TaggedItem
+import operator
+from .forms import SearchForm
+
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -471,3 +474,33 @@ def create_project(request):
     else:
         form1 = ProjectForm
         return render(request, 'createproject.html', {'form1': form1})
+
+# class ReportSearchListView(ReportListView):
+#
+#     paginate_by = 10
+#
+#     def get_queryset(self):
+#         result = super(ReportSearchListView, self).get_queryset()
+#
+#         query = self.request.GET.get('r')
+#         if query:
+#             query_list = query.split()
+#             result = result.filter(
+#                 reduce(operator.and_,
+#                        (Report(company__icontains=r) for r in query_list))
+#             )
+#
+#         return result
+
+
+def search(request):
+    form = SearchForm(request.GET or {})
+    if form.is_valid():
+        results = form.get_queryset()
+    else:
+        results = Report.objects.none()
+
+    return render(request, 'search.html',{
+        'form':form,
+        'results':results
+    })

@@ -1,0 +1,54 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h2><a href={% url 'gohome' %}>Go Home</a></h2>
+    <h1>Search</h1>
+    <form action='search.html' method="get">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+{% for report in results %}
+<h2>
+Company Name: {{report.company}}
+</h2>
+
+<h3>
+Phone Number: {{report.phone}}
+</h3>
+
+<h3>
+Company Location: {{report.location}}
+</h3>
+
+<h3>
+Country: {{report.country}}
+</h3>
+
+<h3>
+Sector: {{report.sector}}
+</h3>
+
+<h3>
+Industry: {{report.industry}}
+</h3>
+
+<h3>
+    Funding goal: {{ report.funding_goal }}
+</h3>
+
+<p>
+  Project Description:
+  {{report.description}}
+</p>
+
+
+<h3>
+  <a href={% url 'viewreport' report.pk %}>Show More Information</a>
+</h3>
+
+{% endfor %}
+
+{% endblock %}
+
