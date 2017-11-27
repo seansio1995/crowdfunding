@@ -75,6 +75,8 @@ class Message(models.Model):
 
     message = models.CharField(max_length= 5000, help_text='message',default="")
 
+    content=models.CharField(max_length= 500, help_text='message',default="")
+
     encrypt=models.BooleanField(default=False)
 
 
@@ -97,4 +99,3 @@ class project(models.Model):
 
 
 register(project)
-
