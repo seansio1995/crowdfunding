@@ -165,20 +165,37 @@ def viewreport(request,pk):
 
 @login_required(login_url = 'login')
 def viewallreport(request):
-    search_key = request.POST.get('myList') 
+    search_key = request.POST.get('myList')
     #print(search_key)
-    search_val = request.POST.get('search_val') 
+    search_val = request.POST.get('search_val')
     #report = get_object_or_404(Report)
-    if search_val is None:
-       report_list=Report.objects.all()
+
+    if request.method == 'POST' and "delete-report" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-report" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        reportpk= request.POST.get("report_id")
+        print(reportpk)
+        report = Report.objects.get(pk=reportpk)
+        report.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'delete_report.html'
+              )
+
     else:
-       options = {}
-       options[search_key] = search_val 
-       report_list=Report.objects.filter(**options)
-    #report=Report.objects.all()[0]
-    return render(request,'view_all_report.html',{
-    "report_list":report_list
-})
+        if search_val is None:
+           report_list=Report.objects.all()
+        else:
+           options = {}
+           options[search_key] = search_val
+           report_list=Report.objects.filter(**options)
+        #report=Report.objects.all()[0]
+        return render(request,'view_all_report.html',{
+        "report_list":report_list})
+
 
 
 
@@ -368,15 +385,15 @@ def send_message(request):
                 {'form': MessageForm()})
 
     #####
-    
+
 #def deletemessage(request, pk):
   #  if request.method == 'POST':
   #      message = Message.objects.get(pk=pk)
   #      message.delete()
-  #      return render(request,'deletemessage.html')    
-    
+  #      return render(request,'deletemessage.html')
+
     #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
-    #### make a form for delete 
+    #### make a form for delete
 #@csrf_protect
 def deletemessage(request):
    #message = Message.objects.get(pk=pk)
@@ -392,19 +409,19 @@ def deletemessage(request):
 
    else:
         form = DeleteMessage(instance=message)
-   
+
         template_vars = {'form': form}
         return render(request, 'deletemessage.html', template_vars)
-    
-    
-    
+
+
+
 #def deletemessage(request, pk, template_name='deletemessage.html'):
- #   message = get_object_or_404(Message, pk=pk)    
+ #   message = get_object_or_404(Message, pk=pk)
   #  if request.method=='POST':
    #     message.delete()
     #    return redirect('deletemessage.html')
-    #return render(request, template_name, {'form':form})    
-   
+    #return render(request, template_name, {'form':form})
+
 ###
 
 #@csrf_protect
