@@ -40,5 +40,7 @@ urlpatterns = [
     url(r'^upvote/(?P<pk>[0-9]+)/$', views.upvote_project, name='upvote'),
     url(r'^addproject/(?P<pk>[0-9]+)/$', views.add_project, name='addproject'),
     url(r'^createP/$', views.create_project, name='createproject'),
-    url(r'^search/', views.search, name='search')
+    url(r'^report_search/', views.report_search, name='report_search'),
+    url(r'^project_search/', views.project_search, name='project_search')
+
 ]

@@ -5,7 +5,7 @@ from django.contrib import messages
 from .models import Report
 from simple_search import search_form_factory
 
-from .models import Message
+from .models import Message, project
 
 
 class SignUpForm(UserCreationForm):
@@ -56,11 +56,20 @@ class ProjectForm(forms.Form):
     description = forms.CharField(max_length=1000, required=True)
 
 
-SearchForm = search_form_factory(Report.objects.all(),
+ReportSearchForm = search_form_factory(Report.objects.all(),
                                  ['^company',
                                   'sector',
                                   'current_projects',
                                   'location',
                                   'country',
                                   'industry',
-                                  'description'])
+                                  'description',
+                                  'funding_goal',
+                                  'timestamp'])
+
+ProjectSearchForm = search_form_factory(project.objects.all(),
+                                 ['^project_name',
+                                  'project_description',
+                                  'project_company'
+                                        ])
+

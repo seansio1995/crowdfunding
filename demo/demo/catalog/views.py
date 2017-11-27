@@ -23,7 +23,7 @@ from ast import literal_eval
 from tagging.models import Tag, TaggedItem
 
 import operator
-from .forms import SearchForm
+from .forms import ReportSearchForm, ProjectSearchForm
 
 
 def signup(request):
@@ -602,14 +602,26 @@ def create_project(request):
 #         return result
 
 
-def search(request):
-    form = SearchForm(request.GET or {})
+def report_search(request):
+    form = ReportSearchForm(request.GET or {})
     if form.is_valid():
         results = form.get_queryset()
     else:
         results = Report.objects.none()
 
-    return render(request, 'search.html',{
+    return render(request, 'report_search.html',{
+        'form':form,
+        'results':results
+    })
+
+def project_search(request):
+    form = ProjectSearchForm(request.GET or {})
+    if form.is_valid():
+        results = form.get_queryset()
+    else:
+        results = project.objects.none()
+
+    return render(request, 'project_search.html',{
         'form':form,
         'results':results
     })
