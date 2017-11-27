@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^addproject/(?P<pk>[0-9]+)/$', views.add_project, name='addproject'),
     url(r'^createP/$', views.create_project, name='createproject'),
     url(r'^report_search/', views.report_search, name='report_search'),
-    url(r'^project_search/', views.project_search, name='project_search')
+    url(r'^project_search/', views.project_search, name='project_search'),
+    # url(r'^uploadfile/$', views.file_upload, name='file_upload')
 
 ]
