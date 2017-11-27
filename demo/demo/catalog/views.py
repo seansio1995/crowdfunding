@@ -148,16 +148,10 @@ def viewreport(request,pk):
 })
 
 def viewallreport(request):
-    search_key = request.POST.get('myList') 
-    #print(search_key)
-    search_val = request.POST.get('search_val') 
-    #report = get_object_or_404(Report)
-    if search_val is None:
-       report_list=Report.objects.all()
-    else:
-       options = {}
-       options[search_key] = search_val 
-       report_list=Report.objects.filter(**options)
+
+    options = {}
+    options[search_key] = search_val 
+    report_list=Report.objects.filter(**options)
     #report=Report.objects.all()[0]
     return render(request,'view_all_report.html',{
     "report_list":report_list
