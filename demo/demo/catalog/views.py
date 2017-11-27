@@ -336,8 +336,9 @@ def send_message(request):
                 receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
                 enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
                 message=str(enc_data)
+                content="The message is encrypted"
             message = Message.objects.create(
-                    message=message, sender=sender,receiver=receiver,encrypt=encrypt)
+                    message=message, content=content,sender=sender,receiver=receiver,encrypt=encrypt)
             return render(request,"send_message_success.html")
     else:
         return render(
@@ -364,8 +365,9 @@ def receive_message(request):
                 receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
                 enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
                 message=str(enc_data)
+                content="The message is encrypted"
             message = Message.objects.create(
-                    message=message, sender=sender,receiver=receiver,encrypt=encrypt)
+                    message=message, content=content, sender=sender,receiver=receiver,encrypt=encrypt)
             messages = Message.objects.filter(receiver=request.user.username)
 
             return render(
