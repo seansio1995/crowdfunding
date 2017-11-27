@@ -16,36 +16,29 @@
 		<input type="Text" class = "submit" name = "search_val" />
         <input type="submit" class = "submit" value="Search" name = "viewallreport" />
         </form>
-        
+
 {% for report in report_list reversed %}
 <h2>
 Company Name: {{report.company}}
 </h2>
-
 <!-- <h2>
 Phone Number: {{report.phone}}
 </h2>
-
 <h2>
 Company Location: {{report.location}}
 </h2>
-
 <h2>
 Country: {{report.country}}
 </h2>
-
 <h2>
 Sector: {{report.sector}}
 </h2>
-
 <h2>
 Industry: {{report.industry}}
 </h2>
-
 <h2>
     Funding goal: {{ report.funding_goal }}
 </h2>
-
 <h2>
   Project Description:
   {{report.description}}
