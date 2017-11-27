@@ -2,42 +2,33 @@
 
 {% block content %}
     <h2><a href={% url 'gohome' %}>Go Home</a></h2>
-    <h1>Search</h1>
-    <form action='search.html' method="get">
+    <h3><a href={% url 'report_search' %}>Switch to report search</a></h3>
+    <form action='project_search.html' method="get">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Search</button>
+        <button type="submit">Search Projects</button>
     </form>
 
 <br>
 
 <p>Click on a column header to sort by that column.</p>
 
-
-<table id="search_results_table">
+<table id="project_results_table">
     <thead>
         <tr>
-            <th onclick="sortTable(0)">Company</th>
-            <th onclick="sortTable(1)">Location</th>
-            <th onclick="sortTable(2)">Country</th>
-            <th onclick="sortTable(3)">Sector</th>
-            <th onclick="sortTable(4)">Industry</th>
-            <th onclick="sortTable(5)">Phone</th>
-            <th onclick="sortTable(6)">Funding Goal</th>
-            <th onclick="sortTable(7)">Report Details</th>
+            <th onclick="sortTable(0)">Votes</th>
+            <th onclick="sortTable(1)">Name</th>
+            <th onclick="sortTable(2)">Company</th>
+            <th onclick="sortTable(8)">Report Details</th>
         </tr>
     </thead>
-    {% for report in results %}
+    {% for project in results %}
     <tbody>
         <tr>
-            <td>{{ report.company }}</td>
-            <td>{{ report.location }}</td>
-            <td>{{ report.country }}</td>
-            <td>{{ report.sector }}</td>
-            <td>{{ report.industry }}</td>
-            <td>{{ report.phone }}</td>
-            <td>{{ report.funding_goal }}</td>
-            <td><a href={% url 'viewreport' report.pk %}>View Report</a></td>
+            <td>{{ project.upvotes }}</td>
+            <td>{{ project.project_name }}</td>
+            <td>{{ project.project_company }}</td>
+            <td>{{ project.project_description }}</td>
         </tr>
     </tbody>
     {% endfor %}
@@ -47,7 +38,7 @@
 <script>
 function sortTable(n) {
     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount=0;
-    table = document.getElementById("search_results_table");
+    table = document.getElementById("project_results_table");
     switching = true;
     dir = "asc";
     /* Make a loop that will continue until
@@ -95,45 +86,5 @@ function sortTable(n) {
     }
 }
 </script>
-
-
-{#<h2>#}
-{#Company Name: {{report.company}}#}
-{#</h2>#}
-{##}
-{#<h3>#}
-{#Phone Number: {{report.phone}}#}
-{#</h3>#}
-{##}
-{#<h3>#}
-{#Company Location: {{report.location}}#}
-{#</h3>#}
-{##}
-{#<h3>#}
-{#Country: {{report.country}}#}
-{#</h3>#}
-{##}
-{#<h3>#}
-{#Sector: {{report.sector}}#}
-{#</h3>#}
-{##}
-{#<h3>#}
-{#Industry: {{report.industry}}#}
-{#</h3>#}
-{##}
-{#<h3>#}
-{#    Funding goal: {{ report.funding_goal }}#}
-{#</h3>#}
-{##}
-{#<p>#}
-{#  Project Description:#}
-{#  {{report.description}}#}
-{#</p>#}
-{##}
-{##}
-{#<p>#}
-{#  <a href={% url 'viewreport' report.pk %}>Show More Information</a>#}
-{#</p>#}
-
 
 {% endblock %}

@@ -2,34 +2,35 @@
 
 {% block content %}
     <h2><a href={% url 'gohome' %}>Go Home</a></h2>
-    <h1>Search</h1>
-    <form action='search.html' method="get">
+    <h3><a href={% url 'project_search' %}>Switch to project search</a></h3>
+    <form action='report_search.html' method="get">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Search</button>
+        <button type="submit">Search Reports</button>
     </form>
 
 <br>
 
 <p>Click on a column header to sort by that column.</p>
 
-
 <table id="search_results_table">
     <thead>
         <tr>
-            <th onclick="sortTable(0)">Company</th>
-            <th onclick="sortTable(1)">Location</th>
-            <th onclick="sortTable(2)">Country</th>
-            <th onclick="sortTable(3)">Sector</th>
-            <th onclick="sortTable(4)">Industry</th>
-            <th onclick="sortTable(5)">Phone</th>
-            <th onclick="sortTable(6)">Funding Goal</th>
-            <th onclick="sortTable(7)">Report Details</th>
+            <th onclick="sortTable(0)">Date</th>
+            <th onclick="sortTable(1)">Company</th>
+            <th onclick="sortTable(2)">Location</th>
+            <th onclick="sortTable(3)">Country</th>
+            <th onclick="sortTable(4)">Sector</th>
+            <th onclick="sortTable(5)">Industry</th>
+            <th onclick="sortTable(6)">Phone</th>
+            <th onclick="sortTable(7)">Funding Goal</th>
+            <th onclick="sortTable(8)">Report Details</th>
         </tr>
     </thead>
     {% for report in results %}
     <tbody>
         <tr>
+            <td>{{ report.timestamp }}</td>
             <td>{{ report.company }}</td>
             <td>{{ report.location }}</td>
             <td>{{ report.country }}</td>
