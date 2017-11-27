@@ -382,6 +382,7 @@ def receive_message(request):
 
 #@csrf_protect
 def receivemessage(request):
+    print("****h******")
     print(request.POST)
     if request.method == 'POST' and "delete-message" in request.POST:
         #form = DeleteMessage(request.POST, instance=message)
