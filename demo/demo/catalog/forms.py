@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib import messages
+from .models import Report
+from simple_search import search_form_factory
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
@@ -42,3 +44,6 @@ class ProjectForm(forms.Form):
     companyname = forms.CharField(max_length=30, required=True)
     projectname = forms.CharField(max_length=30, required=True)
     description = forms.CharField(max_length=1000, required=True)
+
+SearchForm = search_form_factory(Report.objects.all(),
+                                 ['^company'])
