@@ -11,7 +11,7 @@
 
 <br>
 
-<table>
+<table id="search_results_table">
     <thead>
         <tr>
             <th>Company</th>
@@ -20,7 +20,8 @@
             <th>Sector</th>
             <th>Industry</th>
             <th>Phone</th>
-            <th>Funding goal</th>
+            <th>Funding Goal</th>
+            <th>Report Details</th>
         </tr>
     </thead>
     {% for report in results %}
@@ -33,6 +34,7 @@
             <td>{{ report.industry }}</td>
             <td>{{ report.phone }}</td>
             <td>{{ report.funding_goal }}</td>
+            <td><a href={% url 'viewreport' report.pk %}>View Report</a></td>
         </tr>
     </tbody>
     {% endfor %}
