@@ -39,8 +39,17 @@ class unSuspendUser(forms.Form):
 class MessageForm(forms.Form):
     receiver = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'max_length': 255}))
     message = forms.CharField(widget=forms.Textarea)
+    encrypt = forms.BooleanField(required=False)
+
     
 class DeleteMessage(forms.ModelForm):
     class Meta:
         model = Message
         fields = []
+
+
+class ProjectForm(forms.Form):
+    companyname = forms.CharField(max_length=30, required=True)
+    projectname = forms.CharField(max_length=30, required=True)
+    description = forms.CharField(max_length=1000, required=True)
+

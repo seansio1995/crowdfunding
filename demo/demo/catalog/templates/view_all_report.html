@@ -1,6 +1,7 @@
 {% extends "base_generic.html" %}
 {% block content %}
 <h2><a href={% url 'gohome' %}>Go Back</a></h2>
+
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
         <label>Select</label>
              <select id = "myList" name="myList">
@@ -15,6 +16,7 @@
 		<input type="Text" class = "submit" name = "search_val" />
         <input type="submit" class = "submit" value="Search" name = "viewallreport" />
         </form>
+
 {% for report in report_list reversed %}
 <h2>
 Company Name: {{report.company}}
@@ -53,3 +55,8 @@ Industry: {{report.industry}}
 <h2><b>-------------------------------------------------------------------</b></h2>
 {% endfor %}
 {% endblock %}
+
+
+
+
+
