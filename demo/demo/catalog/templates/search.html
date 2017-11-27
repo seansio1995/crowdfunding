@@ -9,46 +9,131 @@
         <button type="submit">Search</button>
     </form>
 
-{% for report in results %}
-<h2>
-Company Name: {{report.company}}
-</h2>
+<br>
 
-<h3>
-Phone Number: {{report.phone}}
-</h3>
-
-<h3>
-Company Location: {{report.location}}
-</h3>
-
-<h3>
-Country: {{report.country}}
-</h3>
-
-<h3>
-Sector: {{report.sector}}
-</h3>
-
-<h3>
-Industry: {{report.industry}}
-</h3>
-
-<h3>
-    Funding goal: {{ report.funding_goal }}
-</h3>
-
-<p>
-  Project Description:
-  {{report.description}}
-</p>
+<p>Click on a column header to sort by that column.</p>
 
 
-<h3>
-  <a href={% url 'viewreport' report.pk %}>Show More Information</a>
-</h3>
+<table id="search_results_table">
+    <thead>
+        <tr>
+            <th onclick="sortTable(0)">Company</th>
+            <th onclick="sortTable(1)">Location</th>
+            <th onclick="sortTable(2)">Country</th>
+            <th onclick="sortTable(3)">Sector</th>
+            <th onclick="sortTable(4)">Industry</th>
+            <th onclick="sortTable(5)">Phone</th>
+            <th onclick="sortTable(6)">Funding Goal</th>
+            <th onclick="sortTable(7)">Report Details</th>
+        </tr>
+    </thead>
+    {% for report in results %}
+    <tbody>
+        <tr>
+            <td>{{ report.company }}</td>
+            <td>{{ report.location }}</td>
+            <td>{{ report.country }}</td>
+            <td>{{ report.sector }}</td>
+            <td>{{ report.industry }}</td>
+            <td>{{ report.phone }}</td>
+            <td>{{ report.funding_goal }}</td>
+            <td><a href={% url 'viewreport' report.pk %}>View Report</a></td>
+        </tr>
+    </tbody>
+    {% endfor %}
+</table>
 
-{% endfor %}
+{# taken from w3schools "how to sort table" tutorial #}
+<script>
+function sortTable(n) {
+    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount=0;
+    table = document.getElementById("search_results_table");
+    switching = true;
+    dir = "asc";
+    /* Make a loop that will continue until
+  no switching has been done: */
+    while (switching) {
+        // Start by saying: no switching is done:
+        switching = false;
+        rows = table.getElementsByTagName("TR");
+        /* Loop through all table rows (except the
+    first, which contains table headers): */
+        for (i = 1; i < (rows.length - 1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            if (dir == "asc") {
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (dir == "desc") {
+                // Check if the two rows should switch place:
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    // I so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && dir == "asc") {
+                dir = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+</script>
+
+
+{#<h2>#}
+{#Company Name: {{report.company}}#}
+{#</h2>#}
+{##}
+{#<h3>#}
+{#Phone Number: {{report.phone}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Company Location: {{report.location}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Country: {{report.country}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Sector: {{report.sector}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#Industry: {{report.industry}}#}
+{#</h3>#}
+{##}
+{#<h3>#}
+{#    Funding goal: {{ report.funding_goal }}#}
+{#</h3>#}
+{##}
+{#<p>#}
+{#  Project Description:#}
+{#  {{report.description}}#}
+{#</p>#}
+{##}
+{##}
+{#<p>#}
+{#  <a href={% url 'viewreport' report.pk %}>Show More Information</a>#}
+{#</p>#}
+
 
 {% endblock %}
-
