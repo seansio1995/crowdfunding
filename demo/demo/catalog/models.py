@@ -3,9 +3,9 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
+from tagging.registry import register
+
 from django.utils import timezone
-import datetime
-from Crypto.PublicKey import RSA
 
 
 # Create your models here.
@@ -39,8 +39,6 @@ def save_user_profile(sender, instance, **kwargs):
 class Report(models.Model):
     report_no = models.AutoField(primary_key=True)
 
-    #init_date = models.DateTimeField(default=timezone.now)
-
     current_projects = models.CharField(default= "No current Projects",max_length= 1000, help_text="Projects")
 
     company = models.CharField(max_length=30, help_text="Company name")
@@ -59,12 +57,16 @@ class Report(models.Model):
 
     description=models.CharField(default="No description yet",max_length=3000,help_text="Project description")
 
+    timestamp = models.DateTimeField(default = timezone.now)
+
     #created_by = models.ForeignKey(User)
 
     #objects = models.Manager()
 
     #have to be able to mark reports as private
     is_private = models.BooleanField(default = False)
+
+    files = models.FileField(null = True,blank = True, upload_to= 'documents/%Y/%m/%d/')
 
 class Message(models.Model):
     receiver = models.CharField(max_length= 30, help_text="Receiver",default="")
@@ -81,4 +83,18 @@ class KeyPair(models.Model):
     user = models.OneToOneField(User)
     RSAkey = models.CharField(max_length=15000)
     pubkey=models.CharField(max_length=15000)
+
+
+
+class project(models.Model):
+    upvotes = models.IntegerField(default = 0, help_text='upvotes')
+
+    project_name = models.CharField(max_length= 100, help_text='project name')
+
+    project_description = models.CharField(max_length= 1000, help_text='project description')
+
+    project_company = models.CharField(max_length= 100, help_text='project name',default = '')
+
+
+register(project)
 
