@@ -44,11 +44,11 @@ Industry: {{report.industry}}
   <a href={% url 'viewreport' report.pk %}>Show More Information</a>
 </h2>
 
+
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+  <input type="hidden" name="report_id" value="{{report.pk}}" />
+  <input type="submit" value="Delete Report" id="report.pk" name="delete-report" />
+</form>
 <h2><b>-------------------------------------------------------------------</b></h2>
 {% endfor %}
 {% endblock %}
-
-
-
-
-

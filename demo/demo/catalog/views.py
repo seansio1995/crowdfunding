@@ -156,11 +156,27 @@ def viewreport(request,pk):
 def viewallreport(request):
     #Not implemented yet
     #report = get_object_or_404(Report)
-    report_list=Report.objects.all()
-    #report=Report.objects.all()[0]
-    return render(request,'view_all_report.html',{
-    "report_list":report_list
-})
+    if request.method == 'POST' and "delete-report" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-report" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        reportpk= request.POST.get("report_id")
+        print(reportpk)
+        report = Report.objects.get(pk=reportpk)
+        report.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'delete_report.html'
+              )
+
+    else:
+        report_list=Report.objects.all()
+        #report=Report.objects.all()[0]
+        return render(request,'view_all_report.html',{
+        "report_list":report_list
+    })
 
 
 

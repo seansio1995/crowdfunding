@@ -1,0 +1,9 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h2><a href={% url 'viewallreport' %}>Go Back</a></h2>
+            <ul class="sidebar-nav">
+    <li><a href={% url 'logout' %}> Log Out</a></li>
+</ul>
+    <h1>Report Deleted Successfully!</h1>
+{% endblock %}
