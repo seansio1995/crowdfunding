@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import DeleteMessage
 from .models import Message
 
+from django.http import HttpResponseRedirect, HttpResponse
 
 def signup(request):
     if request.method == 'POST':
@@ -54,6 +55,7 @@ def report_list(request):
 
 
 def index(request):
+    #return HttpResponse("Hello, world.  You're at the catalog index.")
     return render(
         request,
         'index.html',
@@ -381,6 +383,19 @@ def receive_message(request):
 #@csrf_protect
 def receivemessage(request):
     print(request.POST)
+    if request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-message" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'deletemessage.html'
+              )
     if request.method=="POST" and "delete-message" not in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -402,15 +417,6 @@ def receivemessage(request):
             'receivemessage.html',
             {'messages': messages,'form':MessageForm()}
         )
-    if request.method == 'POST' and "delete-message" in request.POST:
-        #form = DeleteMessage(request.POST, instance=message)
-        print("delete-message" in request.POST)
-        #if form.is_valid(): # checks CSRF
-        messagepk= request.POST.get("messagepk")
-        message = Message.objects.get(id=messagepk)
-        message.delete()
-        #message.save()
-        return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
 
     
 def gohome(request):
