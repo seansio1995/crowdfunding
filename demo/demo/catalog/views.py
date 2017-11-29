@@ -15,10 +15,10 @@ from .models import Message
 from django.http import HttpResponseRedirect, HttpResponse
 
 
-from Crypto import Random
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_v1_5
-import Crypto
+# from Crypto import Random
+# from Crypto.PublicKey import RSA
+# from Crypto.Cipher import PKCS1_v1_5
+# import Crypto
 from ast import literal_eval
 from tagging.models import Tag, TaggedItem
 
@@ -35,12 +35,12 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
-            random_generator = Random.new().read
-            RSAkey=RSA.generate(1024,random_generator).exportKey()
-            pubkey=RSA.importKey(RSAkey).publickey().exportKey()
-            keypair = KeyPair.objects.create(
-                user=user,RSAkey=RSAkey,pubkey=pubkey
-            )
+            # random_generator = Random.new().read
+            # RSAkey=RSA.generate(1024,random_generator).exportKey()
+            # pubkey=RSA.importKey(RSAkey).publickey().exportKey()
+            # keypair = KeyPair.objects.create(
+            #     user=user,RSAkey=RSAkey,pubkey=pubkey
+            # )
 
             if user_type=="company":
                 user.profile.is_company = True
@@ -368,9 +368,9 @@ def send_message(request):
                 user = User.objects.get(username=receiver)
                 receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
                 src_data=message
-                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                message=str(enc_data)
+                # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                # message=str(enc_data)
                 content="The message is encrypted"
             message = Message.objects.create(
                     message=message, content=content,sender=sender,receiver=receiver,encrypt=encrypt)
@@ -381,28 +381,6 @@ def send_message(request):
                 'send_message.html',
                 {'form': MessageForm()})
 
-    #####
-
-#def deletemessage(request, pk):
-  #  if request.method == 'POST':
-  #      message = Message.objects.get(pk=pk)
-  #      message.delete()
-  #      return render(request,'deletemessage.html')
-
-    #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
-    #### make a form for delete
-
-
-
-
-#def deletemessage(request, pk, template_name='deletemessage.html'):
- #   message = get_object_or_404(Message, pk=pk)
-  #  if request.method=='POST':
-   #     message.delete()
-    #    return redirect('deletemessage.html')
-    #return render(request, template_name, {'form':form})
-
-###
 
 #@csrf_protect
 def receive_message(request):
@@ -441,12 +419,9 @@ def receive_message(request):
             'receivemessage.html',
             {'messages': messages,'form':MessageForm()}
         )
-    
-    
-    
-    
-    
-    
+
+
+
     if request.method=="POST" and "send-message" in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -458,9 +433,9 @@ def receive_message(request):
             if encrypt:
                 user = User.objects.get(username=receiver)
                 src_data=message
-                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                message=str(enc_data)
+                # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                # message=str(enc_data)
                 content="The message is encrypted"
             message = Message.objects.create(
                     message=message, content=content, sender=sender,receiver=receiver,encrypt=encrypt)
@@ -483,9 +458,9 @@ def receive_message(request):
         if message.encrypt:
             print("find message!")
             user = User.objects.get(username=request.user.username)
-            receiver_keypair=KeyPair.objects.get(user=user).RSAkey
-            privkey = RSA.importKey(receiver_keypair)
-            message.message=privkey.decrypt(eval(message.message)).decode()
+            # receiver_keypair=KeyPair.objects.get(user=user).RSAkey
+            # privkey = RSA.importKey(receiver_keypair)
+            # message.message=privkey.decrypt(eval(message.message)).decode()
             message.encrypt=False
             message.save()
         else:
@@ -523,43 +498,6 @@ def receive_message(request):
             {'messages': messages,'form':MessageForm()}
         )
 
-#@csrf_protect
-def receivemessage(request):
-    print(request.POST)
-    if request.method == 'POST' and "delete-message" in request.POST:
-        #form = DeleteMessage(request.POST, instance=message)
-        print("delete-message" in request.POST)
-        #if form.is_valid(): # checks CSRF
-        messagepk= request.POST.get("messagepk")
-        message = Message.objects.get(id=messagepk)
-        message.delete()
-        #message.save()
-        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
-        return render(
-                 request,
-                 'deletemessage.html'
-              )
-    if request.method=="POST" and "delete-message" not in request.POST:
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = form.cleaned_data['message']
-            receiver= (form.cleaned_data['receiver']).strip()
-            sender = request.user.username
-            message = Message.objects.create(
-                    message=message, sender=sender,receiver=receiver)
-            messages = Message.objects.filter(receiver=request.user.username)
-            return render(
-                    request,
-                    'receivemessage.html',
-                    {'messages': messages,'form':MessageForm()}
-                )
-
-    messages = Message.objects.filter(receiver=request.user.username)
-    return render(
-            request,
-            'receivemessage.html',
-            {'messages': messages,'form':MessageForm()}
-        )
 
 def gohome(request):
     if request.user.profile.is_manager == True:
@@ -570,12 +508,11 @@ def gohome(request):
         return render(request,"investor_home.html")
 
 def project_list(request):
-    Tags = Tag.objects.all()
-    if request.user.username in Tags:
+    try:
         has_project = True
         tags = Tag.objects.get(name = request.user.username)
         Projects = TaggedItem.objects.get_by_model(project,tags)
-    else:
+    except:
         has_project = False
         Projects = []
     return render(request, 'project_list.html', {'projects': Projects, 'has_project': has_project})
