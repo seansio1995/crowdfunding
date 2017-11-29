@@ -4,9 +4,9 @@
  {% block content %}
           <ul class="sidebar-nav">
      <li><a href={% url 'logout' %}> Log Out</a></li>
-              <li><a href={% url 'gohomehome' %}>Home</a></li>
+              <li><a href={% url 'gohome' %}>Home</a></li>
 </ul>
-     <form action="{% url upload_pic %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+     <form action="{% url 'profpic' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
     <p>
         <input id="id_image" type="file" class="" name="image">
     </p>

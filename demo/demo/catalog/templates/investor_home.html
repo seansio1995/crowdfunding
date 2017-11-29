@@ -5,7 +5,7 @@
              <ul class="sidebar-nav">
      <li><a href={% url 'logout' %}> Log Out</a></li>
 </ul>
-    <img src=path/to/images/{{ user.get_profile.avatar }}">
+
      <h1>Welcome Back</h1>
         <li><a href={% url 'viewallreport' %}>View all reports</a></li>
         <li><a href={% url 'sendmessage' %}>Send Message</a></li>
@@ -15,4 +15,5 @@
             <li><a href={% url 'add-user-g' %}>Add User to One of Your Groups</a></li>
         <li><a href={% url 'projects' %}>Your Projects</a></li>
             <li><a href={% url 'allprojects' %}>All Projects</a></li>
+                    <li><a href={% url 'profpic' %}>Add Profile Picture</a></li>
  {% endblock %}

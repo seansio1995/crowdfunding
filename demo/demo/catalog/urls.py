@@ -2,8 +2,8 @@ from django.conf.urls import url
 from . import views
 from django.conf import settings
 from django.contrib.auth.views import logout
-
-
+from django.conf.urls.static import static
+from django.views.static import serve
 
 
 urlpatterns = [
@@ -41,6 +41,6 @@ urlpatterns = [
     url(r'^addproject/(?P<pk>[0-9]+)/$', views.add_project, name='addproject'),
     url(r'^createP/$', views.create_project, name='createproject'),
     url(r'^report_search/', views.report_search, name='report_search'),
-    url(r'^project_search/', views.project_search, name='project_search')
-
+    url(r'^project_search/', views.project_search, name='project_search'),
+    url(r'^profpic/', views.upload_pic, name='profpic'),
 ]

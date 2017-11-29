@@ -123,3 +123,4 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'auth.User'
 LOGOUT_REDIRECT_URL = 'index'
+
