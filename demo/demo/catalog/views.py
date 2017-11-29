@@ -15,10 +15,10 @@ from .models import Message
 from django.http import HttpResponseRedirect, HttpResponse
 
 
-# from Crypto import Random
-# from Crypto.PublicKey import RSA
-# from Crypto.Cipher import PKCS1_v1_5
-# import Crypto
+from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
+import Crypto
 from ast import literal_eval
 from tagging.models import Tag, TaggedItem
 
@@ -420,8 +420,6 @@ def receive_message(request):
             {'messages': messages,'form':MessageForm()}
         )
 
-
-
     if request.method=="POST" and "send-message" in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -433,9 +431,9 @@ def receive_message(request):
             if encrypt:
                 user = User.objects.get(username=receiver)
                 src_data=message
-                # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                # message=str(enc_data)
+                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                message=str(enc_data)
                 content="The message is encrypted"
             message = Message.objects.create(
                     message=message, content=content, sender=sender,receiver=receiver,encrypt=encrypt)
@@ -458,9 +456,9 @@ def receive_message(request):
         if message.encrypt:
             print("find message!")
             user = User.objects.get(username=request.user.username)
-            # receiver_keypair=KeyPair.objects.get(user=user).RSAkey
-            # privkey = RSA.importKey(receiver_keypair)
-            # message.message=privkey.decrypt(eval(message.message)).decode()
+            receiver_keypair=KeyPair.objects.get(user=user).RSAkey
+            privkey = RSA.importKey(receiver_keypair)
+            message.message=privkey.decrypt(eval(message.message)).decode()
             message.encrypt=False
             message.save()
         else:
