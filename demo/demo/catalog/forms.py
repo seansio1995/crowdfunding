@@ -73,3 +73,7 @@ ProjectSearchForm = search_form_factory(project.objects.all(),
                                   'project_company'
                                         ])
 
+
+class ImageUploadForm(forms.Form):
+    """Image upload form."""
+    image = forms.ImageField()
