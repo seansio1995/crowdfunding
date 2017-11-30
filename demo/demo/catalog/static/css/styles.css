@@ -9,6 +9,10 @@ table, th, td {
     padding: 15px;
 }
 
+.comment{
+  border: 1px solid black;
+  padding: 15px;
+}
 th {
     cursor: pointer;
 }

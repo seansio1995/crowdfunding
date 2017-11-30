@@ -1,5 +1,13 @@
 {% extends "base_generic.html" %}
 {% block content %}
+<style>
+  .comment{
+    border: 1px solid black;
+    padding: 15px;
+    width: 360px
+  }
+</style>
+
 <h2><a href={% url 'gohome' %}>Go Home</a></h2>
 <h2>
 Company Name: {{report.company}}
@@ -32,4 +40,18 @@ Industry: {{report.industry}}
 <h2>
     <a href={% url 'edit_report' report.pk %}>Edit this report</a>
 </h2>
+<h2>Comments Below</h2>
+
+{% for comment in comments  %}
+
+<h4>{{comment.sender_name}}</h4>
+comment: <h4 class="comment">{{comment.comment}}</h4>
+
+{% endfor  %}
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+            <table>
+            {{ commentform}}
+            </table>
+            <input type="submit" class = "submit" value="Post Comment" />
+        </form>
 {% endblock %}

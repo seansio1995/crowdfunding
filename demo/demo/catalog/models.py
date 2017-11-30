@@ -99,5 +99,9 @@ class project(models.Model):
 
     project_company = models.CharField(max_length= 100, help_text='project name',default = '')
 
-
 register(project)
+
+class comment(models.Model):
+    sender_name = models.CharField(max_length= 100, help_text='sender name')
+    comment=models.CharField(max_length=2000,help_text="comment")
+    report_id=models.IntegerField(default = 0, help_text='report id')

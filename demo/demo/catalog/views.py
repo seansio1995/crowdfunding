@@ -2,10 +2,10 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import ImageUploadForm, SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage
+from .forms import ImageUploadForm, SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage,CommentForm
 
 from django.contrib.auth.models import User,Group
-from .models import Report, Message,KeyPair, project
+from .models import Report, Message,KeyPair, project,comment
 from django.contrib.auth.decorators import login_required
 
 
@@ -154,10 +154,17 @@ def finish_edit(request, pk):
 
 @login_required(login_url = 'login')
 def viewreport(request,pk):
+    if request.method=="POST":
+        form=CommentForm(request.POST)
+        if form.is_valid():
+            comment_content=form.cleaned_data["comment"]
+            comment.objects.create(sender_name=request.user.username,comment=comment_content,report_id=pk)
     #report = get_object_or_404(Report)
+    commentform=CommentForm(request.POST)
     report=Report.objects.get(pk=pk)
+    comments=comment.objects.filter(report_id=pk)
     return render(request,'view_report.html',{
-    "report":report
+    "report":report,"commentform":CommentForm(),"comments":comments
 })
 
 @login_required(login_url = 'login')

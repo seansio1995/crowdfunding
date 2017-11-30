@@ -43,7 +43,6 @@ class MessageForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea)
     encrypt = forms.BooleanField(required=False)
 
-    
 class DeleteMessage(forms.ModelForm):
     class Meta:
         model = Message
@@ -77,3 +76,7 @@ ProjectSearchForm = search_form_factory(project.objects.all(),
 class ImageUploadForm(forms.Form):
     """Image upload form."""
     image = forms.ImageField()
+
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea)
