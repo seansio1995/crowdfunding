@@ -5,6 +5,7 @@
              <ul class="sidebar-nav">
      <li><a href={% url 'logout' %}> Log Out</a></li>
 </ul>
+ <img src = "{{ user.profile.avatar.url }}" width = "240">
      <h1>Welcome Back</h1>
         <li><a href={% url 'viewallreport' %}>View all reports</a></li>
     <li><a href={% url 'createreport' %}>Create Report</a></li>
@@ -19,4 +20,5 @@
         <li><a href={% url 'unsuspend' %}>Unsuspend a User</a></li>
         <li><a href={% url 'projects' %}>Your Projects</a></li>
             <li><a href={% url 'allprojects' %}>All Projects</a></li>
+                    <li><a href={% url 'profpic' %}>Add Profile Picture</a></li>
 {% endblock %}

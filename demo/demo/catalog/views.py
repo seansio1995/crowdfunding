@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage
+from .forms import ImageUploadForm, SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage
 
 from django.contrib.auth.models import User,Group
 from .models import Report, Message,KeyPair, project
@@ -381,31 +381,45 @@ def send_message(request):
                 'send_message.html',
                 {'form': MessageForm()})
 
-    #####
-
-#def deletemessage(request, pk):
-  #  if request.method == 'POST':
-  #      message = Message.objects.get(pk=pk)
-  #      message.delete()
-  #      return render(request,'deletemessage.html')
-
-    #### post a  rpimary key, message.object.get (pk==pk) , message.delete(), return a response to deletemsg.html
-    #### make a form for delete
-
-
-
-
-#def deletemessage(request, pk, template_name='deletemessage.html'):
- #   message = get_object_or_404(Message, pk=pk)
-  #  if request.method=='POST':
-   #     message.delete()
-    #    return redirect('deletemessage.html')
-    #return render(request, template_name, {'form':form})
-
-###
 
 #@csrf_protect
 def receive_message(request):
+    print(request.POST)
+    if request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-message" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'deletemessage.html'
+              )
+    if request.method=="POST" and "delete-message" not in request.POST:
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            receiver= (form.cleaned_data['receiver']).strip()
+            sender = request.user.username
+            message = Message.objects.create(
+                    message=message, sender=sender,receiver=receiver)
+            messages = Message.objects.filter(receiver=request.user.username)
+            return render(
+                    request,
+                    'receivemessage.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
+
+    messages = Message.objects.filter(receiver=request.user.username)
+    return render(
+            request,
+            'receivemessage.html',
+            {'messages': messages,'form':MessageForm()}
+        )
+
     if request.method=="POST" and "send-message" in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -482,44 +496,6 @@ def receive_message(request):
             {'messages': messages,'form':MessageForm()}
         )
 
-#@csrf_protect
-def receivemessage(request):
-    print("****h******")
-    print(request.POST)
-    if request.method == 'POST' and "delete-message" in request.POST:
-        #form = DeleteMessage(request.POST, instance=message)
-        print("delete-message" in request.POST)
-        #if form.is_valid(): # checks CSRF
-        messagepk= request.POST.get("messagepk")
-        message = Message.objects.get(id=messagepk)
-        message.delete()
-        #message.save()
-        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
-        return render(
-                 request,
-                 'deletemessage.html'
-              )
-    if request.method=="POST" and "delete-message" not in request.POST:
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = form.cleaned_data['message']
-            receiver= (form.cleaned_data['receiver']).strip()
-            sender = request.user.username
-            message = Message.objects.create(
-                    message=message, sender=sender,receiver=receiver)
-            messages = Message.objects.filter(receiver=request.user.username)
-            return render(
-                    request,
-                    'receivemessage.html',
-                    {'messages': messages,'form':MessageForm()}
-                )
-
-    messages = Message.objects.filter(receiver=request.user.username)
-    return render(
-            request,
-            'receivemessage.html',
-            {'messages': messages,'form':MessageForm()}
-        )
 
 def gohome(request):
     if request.user.profile.is_manager == True:
@@ -530,12 +506,11 @@ def gohome(request):
         return render(request,"investor_home.html")
 
 def project_list(request):
-    Tags = Tag.objects.all()
-    if request.user.username in Tags:
+    try:
         has_project = True
         tags = Tag.objects.get(name = request.user.username)
         Projects = TaggedItem.objects.get_by_model(project,tags)
-    else:
+    except:
         has_project = False
         Projects = []
     return render(request, 'project_list.html', {'projects': Projects, 'has_project': has_project})
@@ -617,3 +592,14 @@ def project_search(request):
         'form':form,
         'results':results
     })
+
+def upload_pic(request):
+    if request.method == 'POST':
+        form = ImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            m = User.objects.get(username=request.user.username)
+            m.profile.avatar = form.cleaned_data['image']
+            m.save()
+            return redirect('gohome')
+    else:
+        return render(request,'upload_pic.html')
