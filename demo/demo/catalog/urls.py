@@ -45,3 +45,4 @@ urlpatterns = [
     url(r'^profpic/', views.upload_pic, name='profpic'),
 
 ]
+

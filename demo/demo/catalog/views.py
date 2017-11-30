@@ -600,6 +600,6 @@ def upload_pic(request):
             m = User.objects.get(username=request.user.username)
             m.profile.avatar = form.cleaned_data['image']
             m.save()
-            return HttpResponse('image upload success')
+            return redirect('gohome')
     else:
         return render(request,'upload_pic.html')

@@ -27,7 +27,7 @@ class profile(models.Model):
     #if user's is_manager field is True, they can set another user's is_suspended to True
     is_suspended = models.BooleanField(default=False)
 
-    avatar = models.ImageField(upload_to='images/',blank = True)
+    avatar = models.ImageField(upload_to='images/',blank = True,default='images/default.jpg')
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
