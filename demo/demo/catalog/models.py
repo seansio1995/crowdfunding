@@ -16,6 +16,10 @@ from django.utils import timezone
     #example use: in views.py if you want to deal with a company user -
         #if request.user.profile.is_company:
             #whatever code here
+
+class file(models.Model):
+    file = models.FileField(upload_to='files/')
+
 class profile(models.Model):
     user = models.OneToOneField(User,primary_key=True)
     is_manager = models.BooleanField(default = False)
@@ -68,7 +72,7 @@ class Report(models.Model):
     #have to be able to mark reports as private
     is_private = models.BooleanField(default = False)
 
-    files = models.FileField(null = True,blank = True, upload_to= 'documents/%Y/%m/%d/')
+    files = models.ForeignKey(file, null=True, blank=True)
 
 class Message(models.Model):
     receiver = models.CharField(max_length= 30, help_text="Receiver",default="")
@@ -105,3 +109,4 @@ class comment(models.Model):
     sender_name = models.CharField(max_length= 100, help_text='sender name')
     comment=models.CharField(max_length=2000,help_text="comment")
     report_id=models.IntegerField(default = 0, help_text='report id')
+
