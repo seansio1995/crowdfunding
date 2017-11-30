@@ -399,11 +399,11 @@ def send_group_message(request):
             group_receiver= (form.cleaned_data['receiver']).strip()
             sender = request.user.username
             encrypt=form.cleaned_data['encrypt']
-            if encrypt:
-                g=Group.objects.get(name=group_receiver)
-                users = g.user_set.all()
-                for user in users:
-                #user = User.objects.get(username=receiver)
+            g=Group.objects.get(name=group_receiver)
+            users = g.user_set.all()
+            for user in users:
+                if encrypt:
+                    print(user.username)
                     receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
                     src_data=message
                     receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
@@ -412,7 +412,7 @@ def send_group_message(request):
                     content="The message is encrypted"
                 message = Message.objects.create(
                         message=message, content=content,sender=sender,receiver=user.username,encrypt=encrypt)
-                return render(request,"send_message_success.html")
+            return render(request,"send_message_success.html")
     else:
         return render(
                 request,
