@@ -3,7 +3,7 @@
 {% block content %}
 <h2><a href={% url 'gohome' %}>Go Back</a></h2>
 <div>
-    <form>
+    <form action="{% url 'finish_edit' report.pk %}" method="post" enctype="multipart/form-data" class="col-lg-5" id="edit_report">
     <h2>Company Report</h2><br>
         {% csrf_token %}
 
