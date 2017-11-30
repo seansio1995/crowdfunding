@@ -389,44 +389,42 @@ def send_message(request):
                 {'form': MessageForm()})
 
 
-#@csrf_protect
-def receive_message(request):
-    print(request.POST)
-    if request.method == 'POST' and "delete-message" in request.POST:
-        #form = DeleteMessage(request.POST, instance=message)
-        print("delete-message" in request.POST)
-        #if form.is_valid(): # checks CSRF
-        messagepk= request.POST.get("messagepk")
-        message = Message.objects.get(id=messagepk)
-        message.delete()
-        #message.save()
-        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
-        return render(
-                 request,
-                 'deletemessage.html'
-              )
-    if request.method=="POST" and "delete-message" not in request.POST:
+
+
+def send_group_message(request):
+    if request.method=="POST":
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.cleaned_data['message']
-            receiver= (form.cleaned_data['receiver']).strip()
+            group_receiver= (form.cleaned_data['receiver']).strip()
             sender = request.user.username
-            message = Message.objects.create(
-                    message=message, sender=sender,receiver=receiver)
-            messages = Message.objects.filter(receiver=request.user.username)
-            return render(
-                    request,
-                    'receivemessage.html',
-                    {'messages': messages,'form':MessageForm()}
-                )
+            encrypt=form.cleaned_data['encrypt']
+            if encrypt:
+                g=Group.objects.get(name=group_receiver)
+                users = g.user_set.all()
+                for user in users:
+                #user = User.objects.get(username=receiver)
+                    receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
+                    src_data=message
+                    receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                    enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                    message=str(enc_data)
+                    content="The message is encrypted"
+                message = Message.objects.create(
+                        message=message, content=content,sender=sender,receiver=user.username,encrypt=encrypt)
+                return render(request,"send_message_success.html")
+    else:
+        return render(
+                request,
+                'send_message.html',
+                {'form': MessageForm()})
 
-    messages = Message.objects.filter(receiver=request.user.username)
-    return render(
-            request,
-            'receivemessage.html',
-            {'messages': messages,'form':MessageForm()}
-        )
 
+
+
+
+#@csrf_protect
+def receive_message(request):
     if request.method=="POST" and "send-message" in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -502,6 +500,7 @@ def receive_message(request):
             'receive_message.html',
             {'messages': messages,'form':MessageForm()}
         )
+
 
 
 def gohome(request):
