@@ -402,19 +402,19 @@ def send_group_message(request):
             encrypt=form.cleaned_data['encrypt']
             g=Group.objects.get(name=group_receiver)
             users = g.user_set.all()
-            content=""
+            sent_content=""
             for user in users:
+                print(user.username)
+                tmp_message=sent_message
                 if encrypt:
-                    print(user.username)
                     receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
                     src_data=sent_message
                     receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
                     enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                    sent_message=str(enc_data)
-                    content="The message is encrypted"
-                print(user.username)
+                    tmp_message=str(enc_data)
+                    sent_content="The message is encrypted"
                 message = Message.objects.create(
-                        message=sent_message, content=content,sender=sender,receiver=user.username,encrypt=encrypt)
+                        message=tmp_message, content=sent_content,sender=sender,receiver=user.username,encrypt=encrypt)
             return render(request,"send_message_success.html")
     else:
         return render(
