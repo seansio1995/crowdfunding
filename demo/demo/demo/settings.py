@@ -123,16 +123,3 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'auth.User'
 LOGOUT_REDIRECT_URL = 'index'
-
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
-
-MEDIA_ROOT = (
-BASE_DIR
-)
-
-
-MEDIA_URL = '/media/'

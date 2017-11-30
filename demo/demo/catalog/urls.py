@@ -43,6 +43,5 @@ urlpatterns = [
     url(r'^report_search/', views.report_search, name='report_search'),
     url(r'^project_search/', views.project_search, name='project_search'),
     url(r'^profpic/', views.upload_pic, name='profpic'),
-url(r'^media/(?P<path>.*)$', serve, { 'document_root': settings.MEDIA_ROOT}),
-url(r'^static/(?P<path>.*)$', serve, { 'document_root': settings.STATIC_FILE_ROOT}),
+
 ]
