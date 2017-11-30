@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^Suspend/$', views.suspend_user, name='suspend'),
     url(r'^UnSuspend/$', views.unsuspend_user, name='unsuspend'),
     url(r'^sendmessage/$',views.send_message,name="sendmessage"),
+    url(r'^sendgroupmessage/$',views.send_group_message,name="sendgroupmessage"),
     url(r'^receivemessage/$',views.receive_message,name="receivemessage"),
     #url(r'^deletemessage/(?P<pk>[0-9]+)/$', views.deletemessage, name='deletemessage'),
     url(r'^gohome/$',views.gohome,name="gohome"),
@@ -45,4 +46,3 @@ urlpatterns = [
     url(r'^profpic/', views.upload_pic, name='profpic'),
 
 ]
-
