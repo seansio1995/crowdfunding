@@ -80,3 +80,15 @@ class ImageUploadForm(forms.Form):
 
 class CommentForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea)
+
+
+class reportRateForm(forms.Form):
+
+    CHOICES=[(i,i) for i in range(11)]
+
+    office = forms.MultipleChoiceField(
+            choices=CHOICES,
+            widget=forms.SelectMultiple(),
+            required=True,
+            label='Ratings',
+        )

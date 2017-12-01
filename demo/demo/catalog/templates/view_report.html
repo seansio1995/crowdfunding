@@ -9,6 +9,25 @@
 </style>
 
 <h2><a href={% url 'gohome' %}>Go Home</a></h2>
+<h2>Average Rating: {{averageRate}}</h2>
+<h2>Current Rating: {{currentRate}}</h2>
+<form action="" method="post">{% csrf_token %}
+  <select name="dropdown">
+    <option selected="selected" disabled>Rate Report:</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+    <option value="10">10</option>
+  </select>
+  <input type="submit" value="Rate" name="rate">
+</form>
+
 <h2>
 Company Name: {{report.company}}
 </h2>
@@ -52,6 +71,6 @@ comment: <h4 class="comment">{{comment.comment}}</h4>
             <table>
             {{ commentform}}
             </table>
-            <input type="submit" class = "submit" value="Post Comment" />
+            <input type="submit" class = "submit" value="Post Comment" name="post_comment"/>
         </form>
 {% endblock %}

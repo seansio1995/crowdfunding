@@ -15,16 +15,17 @@ from .models import Message
 from django.http import HttpResponseRedirect, HttpResponse
 
 
-# from Crypto import Random
-# from Crypto.PublicKey import RSA
-# from Crypto.Cipher import PKCS1_v1_5
-# import Crypto
-# from ast import literal_eval
+from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
+import Crypto
+from ast import literal_eval
 from tagging.models import Tag, TaggedItem
 
 import operator
 from .forms import ReportSearchForm, ProjectSearchForm
-
+from .forms import reportRateForm
+from .models import reportRate
 
 def signup(request):
     if request.method == 'POST':
@@ -35,12 +36,12 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
-            # random_generator = Random.new().read
-            # RSAkey=RSA.generate(1024,random_generator).exportKey()
-            # pubkey=RSA.importKey(RSAkey).publickey().exportKey()
-            # keypair = KeyPair.objects.create(
-            #     user=user,RSAkey=RSAkey,pubkey=pubkey
-            # )
+            random_generator = Random.new().read
+            RSAkey=RSA.generate(1024,random_generator).exportKey()
+            pubkey=RSA.importKey(RSAkey).publickey().exportKey()
+            keypair = KeyPair.objects.create(
+                user=user,RSAkey=RSAkey,pubkey=pubkey
+            )
 
             if user_type=="company":
                 user.profile.is_company = True
@@ -154,18 +155,35 @@ def finish_edit(request, pk):
 
 @login_required(login_url = 'login')
 def viewreport(request,pk):
-    if request.method=="POST":
+    current_rate=0
+    if request.method=="POST" and "post_comment" in request.POST:
         form=CommentForm(request.POST)
         if form.is_valid():
             comment_content=form.cleaned_data["comment"]
             comment.objects.create(sender_name=request.user.username,comment=comment_content,report_id=pk)
-    #report = get_object_or_404(Report)
-    commentform=CommentForm(request.POST)
+    elif request.method=="POST" and "rate" in request.POST:
+        print(request.POST.get("dropdown"))
+        rate=float(request.POST.get("dropdown"))
+        current_rate=rate
+        reportRate.objects.create(report_rate=rate,rate_by=request.user.username,report_id=pk)
+        # rateForm=reportRateForm(request.POST)
+        # if rateForm.is_valid():
+        #     print(rateForm.cleaned_data["value"])
+    #commentform=CommentForm(request.POST)
+    reportRates=reportRate.objects.all()
+    totalRate=0
+    count=0
+    for r in reportRates:
+        totalRate+=r.report_rate
+        count+=1
+    average_rate=totalRate/count
+    average_rate_format=format(average_rate, '.3f')
     report=Report.objects.get(pk=pk)
     comments=comment.objects.filter(report_id=pk)
     return render(request,'view_report.html',{
-    "report":report,"commentform":CommentForm(),"comments":comments
+    "report":report,"commentform":CommentForm(),"comments":comments,"averageRate":average_rate_format,"currentRate":current_rate
 })
+
 
 @login_required(login_url = 'login')
 def viewallreport(request):
@@ -439,9 +457,9 @@ def receive_message(request):
             if encrypt:
                 user = User.objects.get(username=receiver)
                 src_data=message
-                # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                # message=str(enc_data)
+                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                message=str(enc_data)
                 content="The message is encrypted"
             message = Message.objects.create(
                     message=message, content=content, sender=sender,receiver=receiver,encrypt=encrypt)
@@ -465,8 +483,8 @@ def receive_message(request):
             print("find message!")
             user = User.objects.get(username=request.user.username)
             receiver_keypair=KeyPair.objects.get(user=user).RSAkey
-            # privkey = RSA.importKey(receiver_keypair)
-            # message.message=privkey.decrypt(eval(message.message)).decode()
+            privkey = RSA.importKey(receiver_keypair)
+            message.message=privkey.decrypt(eval(message.message)).decode()
             message.encrypt=False
             message.save()
         else:
@@ -491,8 +509,6 @@ def receive_message(request):
         messagepk= request.POST.get("messagepk")
         message = Message.objects.get(id=messagepk)
         message.delete()
-        #message.save()
-        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
         return render(
                  request,
                  'deletemessage.html'

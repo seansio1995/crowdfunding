@@ -110,3 +110,9 @@ class comment(models.Model):
     comment=models.CharField(max_length=2000,help_text="comment")
     report_id=models.IntegerField(default = 0, help_text='report id')
 
+
+
+class reportRate(models.Model):
+    report_rate=models.FloatField(default=0.0,help_text="report rating")
+    report_id=models.IntegerField(default = 0, help_text='report id')
+    rate_by=models.CharField(max_length= 100, help_text='rater username')
