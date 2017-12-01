@@ -15,11 +15,11 @@ from .models import Message
 from django.http import HttpResponseRedirect, HttpResponse
 
 
-# from Crypto import Random
-# from Crypto.PublicKey import RSA
-# from Crypto.Cipher import PKCS1_v1_5
-# import Crypto
-# from ast import literal_eval
+from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_v1_5
+import Crypto
+from ast import literal_eval
 from tagging.models import Tag, TaggedItem
 
 import operator
@@ -36,12 +36,12 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
-            # random_generator = Random.new().read
-            # RSAkey=RSA.generate(1024,random_generator).exportKey()
-            # pubkey=RSA.importKey(RSAkey).publickey().exportKey()
-            # keypair = KeyPair.objects.create(
-            #     user=user,RSAkey=RSAkey,pubkey=pubkey
-            # )
+            random_generator = Random.new().read
+            RSAkey=RSA.generate(1024,random_generator).exportKey()
+            pubkey=RSA.importKey(RSAkey).publickey().exportKey()
+            keypair = KeyPair.objects.create(
+                user=user,RSAkey=RSAkey,pubkey=pubkey
+            )
 
             if user_type=="company":
                 user.profile.is_company = True
@@ -400,9 +400,9 @@ def send_message(request):
                 user = User.objects.get(username=receiver)
                 receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
                 src_data=message
-                # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                # message=str(enc_data)
+                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                message=str(enc_data)
                 content="The message is encrypted"
             message = Message.objects.create(
                     message=message, content=content,sender=sender,receiver=receiver,encrypt=encrypt)
@@ -433,9 +433,9 @@ def send_group_message(request):
                 if encrypt:
                     receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
                     src_data=sent_message
-                    # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                    # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                    # tmp_message=str(enc_data)
+                    receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                    enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                    tmp_message=str(enc_data)
                     sent_content="The message is encrypted"
                 message = Message.objects.create(
                         message=tmp_message, content=sent_content,sender=sender,receiver=user.username,encrypt=encrypt)
@@ -463,9 +463,9 @@ def receive_message(request):
             if encrypt:
                 user = User.objects.get(username=receiver)
                 src_data=message
-                # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                # message=str(enc_data)
+                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                message=str(enc_data)
                 content="The message is encrypted"
             message = Message.objects.create(
                     message=message, content=content, sender=sender,receiver=receiver,encrypt=encrypt)
@@ -489,8 +489,8 @@ def receive_message(request):
             print("find message!")
             user = User.objects.get(username=request.user.username)
             receiver_keypair=KeyPair.objects.get(user=user).RSAkey
-            # privkey = RSA.importKey(receiver_keypair)
-            # message.message=privkey.decrypt(eval(message.message)).decode()
+            privkey = RSA.importKey(receiver_keypair)
+            message.message=privkey.decrypt(eval(message.message)).decode()
             message.encrypt=False
             message.save()
         else:
