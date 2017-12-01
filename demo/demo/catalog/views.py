@@ -161,6 +161,12 @@ def viewreport(request,pk):
         if form.is_valid():
             comment_content=form.cleaned_data["comment"]
             comment.objects.create(sender_name=request.user.username,comment=comment_content,report_id=pk)
+    elif request.method=="POST" and "delete-comment" in request.POST:
+        print("delete-comment" in request.POST)
+        comment_id=request.POST.get("comment_id")
+        print(comment_id)
+        comment_delete=comment.objects.get(id=comment_id)
+        comment_delete.delete()
     elif request.method=="POST" and "rate" in request.POST:
         print(request.POST.get("dropdown"))
         rate=float(request.POST.get("dropdown"))

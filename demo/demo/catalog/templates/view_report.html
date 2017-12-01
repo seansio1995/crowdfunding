@@ -65,7 +65,10 @@ Industry: {{report.industry}}
 
 <h4>{{comment.sender_name}}</h4>
 comment: <h4 class="comment">{{comment.comment}}</h4>
-
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+        <input type="hidden" class = "submit" value="{{comment.id}}" name = "comment_id" />
+        <input type="submit" class = "submit" value="Delete Comment" name = "delete-comment" />
+        </form>
 {% endfor  %}
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
             <table>
