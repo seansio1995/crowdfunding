@@ -92,3 +92,6 @@ class reportRateForm(forms.Form):
             required=True,
             label='Ratings',
         )
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField()

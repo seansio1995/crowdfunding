@@ -2,10 +2,10 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import ImageUploadForm, SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage,CommentForm
+from .forms import FileUploadForm,ImageUploadForm, SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage,CommentForm
 
 from django.contrib.auth.models import User,Group
-from .models import Report, Message,KeyPair, project,comment
+from .models import Report, Message,KeyPair, project,comment,file
 from django.contrib.auth.decorators import login_required
 
 
@@ -15,11 +15,11 @@ from .models import Message
 from django.http import HttpResponseRedirect, HttpResponse
 
 
-from Crypto import Random
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_v1_5
-import Crypto
-from ast import literal_eval
+# from Crypto import Random
+# from Crypto.PublicKey import RSA
+# from Crypto.Cipher import PKCS1_v1_5
+# import Crypto
+# from ast import literal_eval
 from tagging.models import Tag, TaggedItem
 
 import operator
@@ -36,12 +36,12 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
-            random_generator = Random.new().read
-            RSAkey=RSA.generate(1024,random_generator).exportKey()
-            pubkey=RSA.importKey(RSAkey).publickey().exportKey()
-            keypair = KeyPair.objects.create(
-                user=user,RSAkey=RSAkey,pubkey=pubkey
-            )
+            # random_generator = Random.new().read
+            # RSAkey=RSA.generate(1024,random_generator).exportKey()
+            # pubkey=RSA.importKey(RSAkey).publickey().exportKey()
+            # keypair = KeyPair.objects.create(
+            #     user=user,RSAkey=RSAkey,pubkey=pubkey
+            # )
 
             if user_type=="company":
                 user.profile.is_company = True
@@ -463,9 +463,9 @@ def receive_message(request):
             if encrypt:
                 user = User.objects.get(username=receiver)
                 src_data=message
-                receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                message=str(enc_data)
+                # receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
+                # enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
+                # message=str(enc_data)
                 content="The message is encrypted"
             message = Message.objects.create(
                     message=message, content=content, sender=sender,receiver=receiver,encrypt=encrypt)
@@ -489,8 +489,8 @@ def receive_message(request):
             print("find message!")
             user = User.objects.get(username=request.user.username)
             receiver_keypair=KeyPair.objects.get(user=user).RSAkey
-            privkey = RSA.importKey(receiver_keypair)
-            message.message=privkey.decrypt(eval(message.message)).decode()
+            # privkey = RSA.importKey(receiver_keypair)
+            # message.message=privkey.decrypt(eval(message.message)).decode()
             message.encrypt=False
             message.save()
         else:
@@ -634,3 +634,12 @@ def upload_pic(request):
             return redirect('gohome')
     else:
         return render(request,'upload_pic.html')
+
+def upload_file(request,pk):
+    if request.method == 'POST':
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            rep = Report.objects.get(pk=pk)
+            rep.files = file.objects.create(file = form.cleaned_data['file'])
+            rep.save()
+            return redirect('viewallreport')

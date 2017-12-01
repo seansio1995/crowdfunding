@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from tagging.registry import register
-
+import os
 from django.utils import timezone
 
 
@@ -19,6 +19,8 @@ from django.utils import timezone
 
 class file(models.Model):
     file = models.FileField(upload_to='files/')
+    def filename(self):
+        return os.path.basename(self.file.name)
 
 class profile(models.Model):
     user = models.OneToOneField(User,primary_key=True)

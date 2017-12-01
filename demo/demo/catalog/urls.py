@@ -44,5 +44,5 @@ urlpatterns = [
     url(r'^report_search/', views.report_search, name='report_search'),
     url(r'^project_search/', views.project_search, name='project_search'),
     url(r'^profpic/', views.upload_pic, name='profpic'),
-
+    url(r'^upload/(?P<pk>[0-9]+)/$', views.upload_file, name='uploadfile'),
 ]
