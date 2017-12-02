@@ -10,6 +10,10 @@
     </form>
 
 <br>
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+
+            <input type="submit" class = "submit" value="Sort Projects by Vote" name="sort_vote"/>
+        </form>
 
 <p>Click on a column header to sort by that column.</p>
 

@@ -80,6 +80,8 @@ class Report(models.Model):
 
     favorite_count=models.IntegerField(default=0)
 
+    average_rate=models.FloatField(default=0)
+
 class Message(models.Model):
     receiver = models.CharField(max_length= 30, help_text="Receiver",default="")
 

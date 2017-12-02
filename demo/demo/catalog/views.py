@@ -184,15 +184,19 @@ def viewreport(request,pk):
         report.is_favorite=False
         report.save()
 
-    reportRates=reportRate.objects.all()
+    reportRates=reportRate.objects.filter(report_id=pk)
     totalRate=0
     count=0
     for r in reportRates:
         totalRate+=r.report_rate
         count+=1
-    average_rate=totalRate/count
-    average_rate_format=format(average_rate, '.3f')
-
+    if count!=0:
+        average_rate=totalRate/count
+    else:
+        average_rate=0
+    report.average_rate=average_rate
+    report.save()
+    average_rate_format=format(report.average_rate, '.3f')
     comments=comment.objects.filter(report_id=pk)
     return render(request,'view_report.html',{
     "report":report,"commentform":CommentForm(),"comments":comments,"averageRate":average_rate_format,"currentRate":current_rate
@@ -614,7 +618,8 @@ def report_search(request):
         results = form.get_queryset()
     else:
         results = Report.objects.none()
-
+    if request.method=="POST" and "sort_rate" in  request.POST:
+        results=Report.objects.order_by("-average_rate")
     return render(request, 'report_search.html',{
         'form':form,
         'results':results
@@ -626,7 +631,8 @@ def project_search(request):
         results = form.get_queryset()
     else:
         results = project.objects.none()
-
+    if request.method=="POST" and "sort_vote" in request.POST:
+        results=project.objects.order_by("-upvotes")
     return render(request, 'project_search.html',{
         'form':form,
         'results':results

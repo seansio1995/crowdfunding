@@ -11,6 +11,11 @@
 
 <br>
 
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+
+            <input type="submit" class = "submit" value="Sort Reports by Rating" name="sort_rate"/>
+        </form>
+
 <p>Click on a column header to sort by that column.</p>
 
 <table id="search_results_table">
@@ -18,13 +23,14 @@
         <tr>
             <th onclick="sortTable(0)">Date</th>
             <th onclick="sortTable(1)">Company</th>
-            <th onclick="sortTable(2)">Location</th>
-            <th onclick="sortTable(3)">Country</th>
-            <th onclick="sortTable(4)">Sector</th>
-            <th onclick="sortTable(5)">Industry</th>
-            <th onclick="sortTable(6)">Phone</th>
-            <th onclick="sortTable(7)">Funding Goal</th>
-            <th onclick="sortTable(8)">Report Details</th>
+            <th onclick="sortTable(2)">Rate</th>
+            <th onclick="sortTable(3)">Location</th>
+            <th onclick="sortTable(4)">Country</th>
+            <th onclick="sortTable(5)">Sector</th>
+            <th onclick="sortTable(6)">Industry</th>
+            <th onclick="sortTable(7)">Phone</th>
+            <th onclick="sortTable(8)">Funding Goal</th>
+            <th onclick="sortTable(9)">Report Details</th>
         </tr>
     </thead>
     {% for report in results %}
@@ -32,6 +38,7 @@
         <tr>
             <td>{{ report.timestamp }}</td>
             <td>{{ report.company }}</td>
+            <td>{{ report.average_rate }}</td>
             <td>{{ report.location }}</td>
             <td>{{ report.country }}</td>
             <td>{{ report.sector }}</td>

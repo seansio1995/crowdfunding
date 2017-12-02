@@ -1,5 +1,29 @@
 {% extends "base_generic.html" %}
 {% block content %}
+<style>
+
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid Gold;
+}
+
+.button1:hover {
+  background-color: Gold;
+  color: black;
+}
+.button2 {
+background-color: Gold;
+color: black;
+border: 2px solid Gold;
+}
+
+.button2:hover {
+background-color: white;
+color: black;
+}
+
+</style>
 <h2><a href={% url 'gohome' %}>Go Back</a></h2>
 
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
@@ -54,7 +78,7 @@ Industry: {{report.industry}}
 
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
           <input type="hidden" name="report_id" value="{{report.pk}}" />
-            <input type="submit" class = "submit" value="Unfavorite Report" name="unfavorite_report"/>
+            <input type="submit" class = "button2" value="Unfavorite Report" name="unfavorite_report"/>
         </form>
 
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
