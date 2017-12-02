@@ -3,7 +3,6 @@
 {% block content %}
 <h2><a href={% url 'gohome' %}>Go Back</a></h2>
 {% for message in messages reversed %}
-
 <h2>Sender:{{message.sender}}</h2>
 <h2>ID:{{message.id}}</h2>
 {% if message.encrypt %}
@@ -23,7 +22,7 @@
             </table>
             <input type="submit" class = "submit" value="Send Message" name="send-message"/>
         </form>
-        
+
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
         <input type="hidden" class = "submit" value="{{message.id}}" name = "messagepk" />
         <input type="submit" class = "submit" value="Delete Message" name = "delete-message" />
