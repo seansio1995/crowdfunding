@@ -76,6 +76,10 @@ class Report(models.Model):
 
     files = models.ForeignKey(file, null=True, blank=True)
 
+    is_favorite=models.BooleanField(default=False)
+
+    favorite_count=models.IntegerField(default=0)
+
 class Message(models.Model):
     receiver = models.CharField(max_length= 30, help_text="Receiver",default="")
 

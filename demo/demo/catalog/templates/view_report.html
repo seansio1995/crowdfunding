@@ -9,6 +9,16 @@
 </style>
 
 <h2><a href={% url 'gohome' %}>Go Home</a></h2>
+{% if report.is_favorite %}
+<form method = "POST" action ="." class = "form-group">{% csrf_token %}
+            <input type="submit" class = "submit" value="Unfavorite Report" name="unfavorite_report"/>
+        </form>
+
+        {% else  %}
+        <form method = "POST" action ="." class = "form-group">{% csrf_token %}
+                    <input type="submit" class = "submit" value="Favorite Report" name="favorite_report"/>
+        </form>
+        {% endif %}
 <h2>Average Rating: {{averageRate}}</h2>
 <h2>Current Rating: {{currentRate}}</h2>
 <form action="" method="post">{% csrf_token %}
@@ -63,7 +73,32 @@ Industry: {{report.industry}}
 
 {% for comment in comments  %}
 
-<h4>{{comment.sender_name}}</h4>
+<style>
+.people-wrap {
+  width: 40%;
+  display: inline-block;
+  /*border: black solid*/
+}
+.people,
+.card {
+  display: inline-block;
+  vertical-align: middle
+}
+img {
+  display: block
+  /* remove gap*/
+}
+</style>
+<div class="people-wrap">
+  <div class="people">
+<img src = "{{ user.profile.avatar.url }}" width = "60" height="40">
+</div>
+<div class="card">
+ <h4>{{comment.sender_name}}</h4>
+</div>
+</div>
+<br/>
+
 comment: <h4 class="comment">{{comment.comment}}</h4>
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
         <input type="hidden" class = "submit" value="{{comment.id}}" name = "comment_id" />
@@ -77,13 +112,23 @@ comment: <h4 class="comment">{{comment.comment}}</h4>
             <input type="submit" class = "submit" value="Post Comment" name="post_comment"/>
         </form>
 
+<h2>Upload Files:</h2>
          <form action="{% url 'uploadfile' report.pk %}" method="post" enctype="multipart/form-data">{% csrf_token %}
     <p>
-        <input id="id_image" type="file" class="" name="file">
-    </p>
+      <input id="id_image" type="file" class="" name="file">
+
     <input type="submit" value="Submit" />
 </form>
+{% if documents %}
+            <ul>
+                {% for document in documents %}
+                    <li><a href="{{ document.url }}">{{ document.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No documents.</p>
+{% endif %}
 
-          <a href="{{ report.files.url }}">{{ report.files.filename }}</a>
+          <!-- <a href="{{ report.files.url }}">{{ report.files.filename }}</a> -->
 
 {% endblock %}

@@ -155,6 +155,7 @@ def finish_edit(request, pk):
 
 @login_required(login_url = 'login')
 def viewreport(request,pk):
+    report=Report.objects.get(pk=pk)
     current_rate=0
     if request.method=="POST" and "post_comment" in request.POST:
         form=CommentForm(request.POST)
@@ -176,6 +177,13 @@ def viewreport(request,pk):
         # if rateForm.is_valid():
         #     print(rateForm.cleaned_data["value"])
     #commentform=CommentForm(request.POST)
+    elif request.method=="POST" and "favorite_report" in request.POST:
+        report.is_favorite=True
+        report.save()
+    elif request.method=="POST" and "unfavorite_report" in request.POST:
+        report.is_favorite=False
+        report.save()
+
     reportRates=reportRate.objects.all()
     totalRate=0
     count=0
@@ -184,7 +192,7 @@ def viewreport(request,pk):
         count+=1
     average_rate=totalRate/count
     average_rate_format=format(average_rate, '.3f')
-    report=Report.objects.get(pk=pk)
+
     comments=comment.objects.filter(report_id=pk)
     return render(request,'view_report.html',{
     "report":report,"commentform":CommentForm(),"comments":comments,"averageRate":average_rate_format,"currentRate":current_rate
@@ -636,10 +644,33 @@ def upload_pic(request):
         return render(request,'upload_pic.html')
 
 def upload_file(request,pk):
+    rep = Report.objects.get(pk=pk)
     if request.method == 'POST':
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            rep = Report.objects.get(pk=pk)
-            rep.files = file.objects.create(file = form.cleaned_data['file'])
+            #rep = Report.objects.get(pk=pk)
+            rep.files = file.objects.create(file=form.cleaned_data['file'])
             rep.save()
-            return redirect('viewallreport')
+            return redirect("viewallreport")
+    # else:
+    #     form=FileUploadForm()
+    # documents=file.objects.all()
+    # return render(request,"view_report.html",{"documents":documents,"form":form})
+def list_favorite_report(request):
+    if request.method=="POST" and "unfavorite_report" in request.POST:
+        reportpk= request.POST.get("report_id")
+        report=Report.objects.get(pk=reportpk)
+        report.is_favorite=False
+        report.save()
+    search_key = request.POST.get('myList')
+    search_val = request.POST.get('search_val')
+    if search_val is None:
+       report_list=Report.objects.filter(is_favorite=True)
+    else:
+       options = {}
+       options[search_key] = search_val
+       report_list=Report.objects.filter(**options)
+       report_list=report_list.filter(is_favorite=True)
+    #report=Report.objects.all()[0]
+    return render(request,'listfavoritereport.html',{
+    "report_list":report_list})

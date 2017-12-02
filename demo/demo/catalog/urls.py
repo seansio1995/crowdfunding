@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^viewreport/(?P<pk>[0-9]+)/$', views.edit_report, name='viewreport'),
     url(r'^viewreport/(?P<pk>[0-9]+)/success/$', views.viewreport, name='viewreport'),
     url(r'^viewallreport/$', views.viewallreport, name='viewallreport'),
+    url(r'^listfavoritereport/$',views.list_favorite_report,name='listfavoritereport'),
     url(r'^viewallreport/(?P<pk>[0-9]+)/$', views.edit_report, name='edit_report'),
     url(r'^viewallreport/(?P<pk>[0-9]+)/success/$', views.finish_edit, name='finish_edit'),
     url(r'^loggedin/$', views.user_home, name='userhome'),

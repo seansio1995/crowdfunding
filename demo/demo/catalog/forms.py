@@ -7,6 +7,8 @@ from simple_search import search_form_factory
 
 from .models import Message, project
 
+from multiupload.fields import MultiFileField
+
 
 class SignUpForm(UserCreationForm):
     username = forms.CharField(max_length=30, required=True)
@@ -94,4 +96,6 @@ class reportRateForm(forms.Form):
         )
 
 class FileUploadForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    #attachments = MultiFileField(min_num=1, max_num=3, max_file_size=1024*1024*5)
+    
