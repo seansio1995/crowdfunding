@@ -27,6 +27,8 @@ from .forms import ReportSearchForm, ProjectSearchForm
 from .forms import reportRateForm
 from .models import reportRate
 
+
+from geopy.geocoders import Nominatim
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -198,8 +200,12 @@ def viewreport(request,pk):
     report.save()
     average_rate_format=format(report.average_rate, '.3f')
     comments=comment.objects.filter(report_id=pk)
+    geolocator = Nominatim()
+    location = geolocator.geocode(report.location)
+    print(location.latitude)
+    print(location.longitude)
     return render(request,'view_report.html',{
-    "report":report,"commentform":CommentForm(),"comments":comments,"averageRate":average_rate_format,"currentRate":current_rate
+    "report":report,"location":location,"commentform":CommentForm(),"comments":comments,"averageRate":average_rate_format,"currentRate":current_rate
 })
 
 
