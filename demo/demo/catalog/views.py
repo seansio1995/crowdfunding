@@ -32,12 +32,12 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
-            # random_generator = Random.new().read
-            # RSAkey=RSA.generate(1024,random_generator).exportKey()
-            # pubkey=RSA.importKey(RSAkey).publickey().exportKey()
-            # keypair = KeyPair.objects.create(
-            #     user=user,RSAkey=RSAkey,pubkey=pubkey
-            # )
+            random_generator = Random.new().read
+            RSAkey=RSA.generate(1024,random_generator).exportKey()
+            pubkey=RSA.importKey(RSAkey).publickey().exportKey()
+            keypair = KeyPair.objects.create(
+                user=user,RSAkey=RSAkey,pubkey=pubkey
+            )
 
             if user_type=="company":
                 user.profile.is_company = True
@@ -180,7 +180,7 @@ def viewallreport(request):
         if search_val is None:
            report_list=Report.objects.all()
         else:
-           report_list = Report.objects.filter(search_val)        
+           report_list = Report.objects.filter(search_val)
            #options = {}
            #options[search_key] = search_val
            #report_list=Report.objects.filter(**options)
@@ -205,7 +205,7 @@ def searchreport(request):
                 q = q | Q(**options)
            else:
                 q = None
-    return q 
+    return q
 
 
 
@@ -632,5 +632,5 @@ def upload_file(request):
             return HttpResponse('file upload failed')
     else:
         return render(request, 'upload_file.html')
-        
+
 \
