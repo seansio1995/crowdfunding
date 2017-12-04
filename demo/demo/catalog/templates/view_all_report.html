@@ -3,18 +3,25 @@
 <h2><a href={% url 'gohome' %}>Go Back</a></h2>
 
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
-        <label>Select</label>
-             <select id = "myList" name="myList">
-               <option value = "company">Company Name</option>
-               <option value = "ceo">CEO Name</option>
-               <option value = "sector">Sector</option>
-               <option value = "industry">Industry</option>
-               <option value = "location">Company Location</option>
-               <option value = "country">Company Country</option>
-               <option value = "projects">Current Projects</option>
-             </select>
-		<input type="Text" class = "submit" name = "search_val" />
-        <input type="submit" class = "submit" value="Search" name = "viewallreport" />
+        <h5><label>Search</label></h5>
+        <h5><label> Company Name</label>
+            <input type="Text" class = "submit" name = "company"></h5>
+		<h5><label> Sector</label>
+               <input type="Text" class = "submit" name = "sector"></h5>
+		<h5><label> Industry</label>
+               <input type="Text" class = "submit" name = "industry"></h5>
+		<h5><label> Location</label>
+               <input type="Text" class = "submit" name = "location"></h5>
+		<h5><label> Country</label>
+               <input type="Text" class = "submit" name = "country"></h5>
+		<h5><label> Current Projects</label>
+               <input type="Text" class = "submit" name = "projects"></h5>
+		<h5><label> Filter </label>
+             <select id = "operator" name="operator">
+               <option value = "and">All</option>
+               <option value = "or">Any</option>
+             </select></h4>
+        <input type="submit" class = "submit" value="GO" name = "viewallreport" />
         </form>
 
 {% for report in report_list reversed %}
@@ -55,7 +62,7 @@ Industry: {{report.industry}}
 
 <form method = "POST" action ="." class = "form-group">{% csrf_token %}
   <input type="hidden" name="report_id" value="{{report.pk}}" />
-  <input type="submit" value="Delete Report" id="report.pk" name="delete-report" />
+  <input type="submit" value="Delete Report" id="report.pk" onclick="return confirm('Are you sure you want to Delete?');" name="delete-report" />
 </form>
 <h2><b>-------------------------------------------------------------------</b></h2>
 {% endfor %}

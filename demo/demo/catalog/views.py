@@ -2,10 +2,10 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .forms import FileUploadForm,ImageUploadForm, SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage,CommentForm
+from .forms import UploadFileForm, ImageUploadForm, SignUpForm, LoginForm, GroupForm, AddUser, SuspendUser, unSuspendUser,MessageForm, ProjectForm, DeleteMessage
 
 from django.contrib.auth.models import User,Group
-from .models import Report, Message,KeyPair, project,comment,file
+from .models import Report, Message,KeyPair, project
 from django.contrib.auth.decorators import login_required
 
 
@@ -13,22 +13,16 @@ from .forms import DeleteMessage
 from .models import Message
 
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.files.storage import FileSystemStorage
+
+# function to handle an uploaded file.
+# from filehandler import handle_uploaded_file
+
+import re
+from django.db.models import Q
 
 
-from Crypto import Random
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_v1_5
-import Crypto
-from ast import literal_eval
-from tagging.models import Tag, TaggedItem
 
-import operator
-from .forms import ReportSearchForm, ProjectSearchForm
-from .forms import reportRateForm
-from .models import reportRate
-
-
-from geopy.geocoders import Nominatim
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -38,12 +32,12 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user_type=request.POST.get("user_type")
             user = authenticate(username=username, password=raw_password)
-            random_generator = Random.new().read
-            RSAkey=RSA.generate(1024,random_generator).exportKey()
-            pubkey=RSA.importKey(RSAkey).publickey().exportKey()
-            keypair = KeyPair.objects.create(
-                user=user,RSAkey=RSAkey,pubkey=pubkey
-            )
+            # random_generator = Random.new().read
+            # RSAkey=RSA.generate(1024,random_generator).exportKey()
+            # pubkey=RSA.importKey(RSAkey).publickey().exportKey()
+            # keypair = KeyPair.objects.create(
+            #     user=user,RSAkey=RSAkey,pubkey=pubkey
+            # )
 
             if user_type=="company":
                 user.profile.is_company = True
@@ -157,64 +151,14 @@ def finish_edit(request, pk):
 
 @login_required(login_url = 'login')
 def viewreport(request,pk):
+    #report = get_object_or_404(Report)
     report=Report.objects.get(pk=pk)
-    current_rate=0
-    if request.method=="POST" and "post_comment" in request.POST:
-        form=CommentForm(request.POST)
-        if form.is_valid():
-            comment_content=form.cleaned_data["comment"]
-            comment.objects.create(sender_name=request.user.username,comment=comment_content,report_id=pk)
-    elif request.method=="POST" and "delete-comment" in request.POST:
-        print("delete-comment" in request.POST)
-        comment_id=request.POST.get("comment_id")
-        print(comment_id)
-        comment_delete=comment.objects.get(id=comment_id)
-        comment_delete.delete()
-    elif request.method=="POST" and "rate" in request.POST:
-        print(request.POST.get("dropdown"))
-        rate=float(request.POST.get("dropdown"))
-        current_rate=rate
-        reportRate.objects.create(report_rate=rate,rate_by=request.user.username,report_id=pk)
-        # rateForm=reportRateForm(request.POST)
-        # if rateForm.is_valid():
-        #     print(rateForm.cleaned_data["value"])
-    #commentform=CommentForm(request.POST)
-    elif request.method=="POST" and "favorite_report" in request.POST:
-        report.is_favorite=True
-        report.save()
-    elif request.method=="POST" and "unfavorite_report" in request.POST:
-        report.is_favorite=False
-        report.save()
-
-    reportRates=reportRate.objects.filter(report_id=pk)
-    totalRate=0
-    count=0
-    for r in reportRates:
-        totalRate+=r.report_rate
-        count+=1
-    if count!=0:
-        average_rate=totalRate/count
-    else:
-        average_rate=0
-    report.average_rate=average_rate
-    report.save()
-    average_rate_format=format(report.average_rate, '.3f')
-    comments=comment.objects.filter(report_id=pk)
-    geolocator = Nominatim()
-    location = geolocator.geocode(report.location)
-    print(location.latitude)
-    print(location.longitude)
     return render(request,'view_report.html',{
-    "report":report,"location":location,"commentform":CommentForm(),"comments":comments,"averageRate":average_rate_format,"currentRate":current_rate
+    "report":report
 })
-
 
 @login_required(login_url = 'login')
 def viewallreport(request):
-    search_key = request.POST.get('myList')
-    #print(search_key)
-    search_val = request.POST.get('search_val')
-    #report = get_object_or_404(Report)
 
     if request.method == 'POST' and "delete-report" in request.POST:
         #form = DeleteMessage(request.POST, instance=message)
@@ -232,17 +176,36 @@ def viewallreport(request):
               )
 
     else:
+        search_val = searchreport(request)
         if search_val is None:
            report_list=Report.objects.all()
         else:
-           options = {}
-           options[search_key] = search_val
-           report_list=Report.objects.filter(**options)
+           report_list = Report.objects.filter(search_val)        
+           #options = {}
+           #options[search_key] = search_val
+           #report_list=Report.objects.filter(**options)
         #report=Report.objects.all()[0]
         return render(request,'view_all_report.html',{
         "report_list":report_list})
 
-
+def searchreport(request):
+    queries = []
+    operator = request.POST.get('operator')
+    keys = ['company', 'sector', 'industry', 'location', 'country', 'projects']
+    q = None
+    for k in keys:
+        if request.POST.get(k) != "":
+           if q is None:
+              q = Q()
+           options = {}
+           options[k] = request.POST.get(k)
+           if operator == "and":
+                q = q & Q(**options)
+           elif operator == "or":
+                q = q | Q(**options)
+           else:
+                q = None
+    return q 
 
 
 
@@ -413,7 +376,6 @@ def send_message(request):
             receiver= (form.cleaned_data['receiver']).strip()
             sender = request.user.username
             encrypt=form.cleaned_data['encrypt']
-            content=""
             if encrypt:
                 user = User.objects.get(username=receiver)
                 receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
@@ -432,44 +394,44 @@ def send_message(request):
                 {'form': MessageForm()})
 
 
-
-
-def send_group_message(request):
-    if request.method=="POST":
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            sent_message = form.cleaned_data['message']
-            group_receiver= (form.cleaned_data['receiver']).strip()
-            sender = request.user.username
-            encrypt=form.cleaned_data['encrypt']
-            g=Group.objects.get(name=group_receiver)
-            users = g.user_set.all()
-            sent_content=""
-            for user in users:
-                print(user.username)
-                tmp_message=sent_message
-                if encrypt:
-                    receiver_keypair=KeyPair.objects.get(user=user).RSAkey.encode('utf-8')
-                    src_data=sent_message
-                    receiver_pubkey=RSA.importKey(KeyPair.objects.get(user=user).pubkey)
-                    enc_data = receiver_pubkey.encrypt(src_data.encode(), 32)[0]
-                    tmp_message=str(enc_data)
-                    sent_content="The message is encrypted"
-                message = Message.objects.create(
-                        message=tmp_message, content=sent_content,sender=sender,receiver=user.username,encrypt=encrypt)
-            return render(request,"send_message_success.html")
-    else:
-        return render(
-                request,
-                'send_message.html',
-                {'form': MessageForm()})
-
-
-
-
-
 #@csrf_protect
 def receive_message(request):
+    print(request.POST)
+    if request.method == 'POST' and "delete-message" in request.POST:
+        #form = DeleteMessage(request.POST, instance=message)
+        print("delete-message" in request.POST)
+        #if form.is_valid(): # checks CSRF
+        messagepk= request.POST.get("messagepk")
+        message = Message.objects.get(id=messagepk)
+        message.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
+        return render(
+                 request,
+                 'deletemessage.html'
+              )
+    if request.method=="POST" and "delete-message" not in request.POST:
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.cleaned_data['message']
+            receiver= (form.cleaned_data['receiver']).strip()
+            sender = request.user.username
+            message = Message.objects.create(
+                    message=message, sender=sender,receiver=receiver)
+            messages = Message.objects.filter(receiver=request.user.username)
+            return render(
+                    request,
+                    'receivemessage.html',
+                    {'messages': messages,'form':MessageForm()}
+                )
+
+    messages = Message.objects.filter(receiver=request.user.username)
+    return render(
+            request,
+            'receivemessage.html',
+            {'messages': messages,'form':MessageForm()}
+        )
+
     if request.method=="POST" and "send-message" in request.POST:
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -533,6 +495,8 @@ def receive_message(request):
         messagepk= request.POST.get("messagepk")
         message = Message.objects.get(id=messagepk)
         message.delete()
+        #message.save()
+        #return HttpResponseRedirect("deletemessage.html") # wherever to go after deleting
         return render(
                  request,
                  'deletemessage.html'
@@ -543,7 +507,6 @@ def receive_message(request):
             'receive_message.html',
             {'messages': messages,'form':MessageForm()}
         )
-
 
 
 def gohome(request):
@@ -624,8 +587,7 @@ def report_search(request):
         results = form.get_queryset()
     else:
         results = Report.objects.none()
-    if request.method=="POST" and "sort_rate" in  request.POST:
-        results=Report.objects.order_by("-average_rate")
+
     return render(request, 'report_search.html',{
         'form':form,
         'results':results
@@ -637,8 +599,7 @@ def project_search(request):
         results = form.get_queryset()
     else:
         results = project.objects.none()
-    if request.method=="POST" and "sort_vote" in request.POST:
-        results=project.objects.order_by("-upvotes")
+
     return render(request, 'project_search.html',{
         'form':form,
         'results':results
@@ -651,38 +612,25 @@ def upload_pic(request):
             m = User.objects.get(username=request.user.username)
             m.profile.avatar = form.cleaned_data['image']
             m.save()
-            return redirect('gohome')
+            return HttpResponse('image upload success')
     else:
         return render(request,'upload_pic.html')
 
-def upload_file(request,pk):
-    rep = Report.objects.get(pk=pk)
+def handle_uploaded_file(f):
+    with open('name.txt', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+def upload_file(request):
     if request.method == 'POST':
-        form = FileUploadForm(request.POST, request.FILES)
+        form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            #rep = Report.objects.get(pk=pk)
-            rep.files = file.objects.create(file=form.cleaned_data['file'])
-            rep.save()
-            return redirect("viewallreport")
-    # else:
-    #     form=FileUploadForm()
-    # documents=file.objects.all()
-    # return render(request,"view_report.html",{"documents":documents,"form":form})
-def list_favorite_report(request):
-    if request.method=="POST" and "unfavorite_report" in request.POST:
-        reportpk= request.POST.get("report_id")
-        report=Report.objects.get(pk=reportpk)
-        report.is_favorite=False
-        report.save()
-    search_key = request.POST.get('myList')
-    search_val = request.POST.get('search_val')
-    if search_val is None:
-       report_list=Report.objects.filter(is_favorite=True)
+            print("*********")
+            handle_uploaded_file(request.FILES['file'])
+            return HttpResponse('file upload success')
+        else:
+            return HttpResponse('file upload failed')
     else:
-       options = {}
-       options[search_key] = search_val
-       report_list=Report.objects.filter(**options)
-       report_list=report_list.filter(is_favorite=True)
-    #report=Report.objects.all()[0]
-    return render(request,'listfavoritereport.html',{
-    "report_list":report_list})
+        return render(request, 'upload_file.html')
+        
+\
