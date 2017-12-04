@@ -29,6 +29,12 @@ from .models import reportRate
 
 
 from geopy.geocoders import Nominatim
+
+
+import re
+from django.db.models import Q
+from django.core.files.storage import FileSystemStorage
+
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -232,16 +238,35 @@ def viewallreport(request):
               )
 
     else:
+        search_val = searchreport(request)
         if search_val is None:
            report_list=Report.objects.all()
         else:
-           options = {}
-           options[search_key] = search_val
-           report_list=Report.objects.filter(**options)
+        #    options = {}
+        #    options[search_key] = search_val
+           report_list=Report.objects.filter(search_val)
         #report=Report.objects.all()[0]
         return render(request,'view_all_report.html',{
         "report_list":report_list})
 
+def searchreport(request):
+    queries = []
+    operator = request.POST.get('operator')
+    keys = ['company', 'sector', 'industry', 'location', 'country', 'projects']
+    q = None
+    for k in keys:
+        if request.POST.get(k) != "":
+           if q is None:
+              q = Q()
+           options = {}
+           options[k] = request.POST.get(k)
+           if operator == "and":
+                q = q & Q(**options)
+           elif operator == "or":
+                q = q | Q(**options)
+           else:
+                q = None
+    return q
 
 
 
