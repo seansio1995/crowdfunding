@@ -1,3 +1,4 @@
-# 3240-group20
+# Crowdfunding Website
 
-cs3240-f17-group20/demo
+### Company users can upload company reports and send encrypted messages to investors
+### Investor users can comment below the report, rate report and favorite report
